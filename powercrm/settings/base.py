@@ -9,7 +9,6 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG")
 
-
 STATIC_URL = config("STATIC_URL")
 
 AUTH_USER_MODEL = "users.User"
@@ -17,13 +16,30 @@ AUTH_USER_MODEL = "users.User"
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "rest_framework_simplejwt",
     "django.contrib.staticfiles",
-    "users.apps.UsersConfig",
+    "phonenumber_field",
+    "django_filters",
+    "company",
+    "sites",
+    "django_countries",
+    "notes",
+    "emails",
+    "supply",
+    "rest_framework",
+    "corsheaders",
+    "api",
+    "document",
+    "reminder",
+    "progress",
+    "quoting",
+    "users",
 ]
 
 MIDDLEWARE = [

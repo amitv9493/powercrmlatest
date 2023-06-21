@@ -6,3 +6,11 @@ python-decouple==3.8
 sqlparse==0.4.4
 typing_extensions==4.6.3
 tzdata==2023.3
+django-cors-headers==3.14.0
+django-countries==7.5.1
+django-filter==23.1
+django-jazzmin==2.6.0
+django-phonenumber-field==7.0.2
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2
+phonenumbers==8.13.8

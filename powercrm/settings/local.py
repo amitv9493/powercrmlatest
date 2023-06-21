@@ -1,12 +1,12 @@
 from .base import *
-
+from decouple import config
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "powercrm",
-        "USER": "root",
-        "PASSWORD": "amitv9493",
+        "NAME": config("NAME"),
+        "USER": config("USER"),
+        "PASSWORD": config("PASSWORD"),
         "HOST": "localhost",
         "PORT": "3306",
     }

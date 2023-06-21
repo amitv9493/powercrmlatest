@@ -183,13 +183,12 @@ class New_suppliesAdmin(admin.ModelAdmin):
         ),
     )
 
-from django_reverse_admin import ReverseModelAdmin
 
 # from .models import Old_Current_supplies, Old_Meter_detail, Old_New_supplies
 
 # @admin.register(Old_Meter_detail)
 # class Old_Meter_detailAdmin(admin.ModelAdmin):
-#     # inline_type = 'stacked'    
+#     # inline_type = 'stacked'
 #     # inline_reverse = ['gas_meter_detail', ('electricity_meter_detail')]
 #     list_display = ['gas_meter_detail__serial_number']
 #     fieldsets = (
@@ -199,5 +198,3 @@ from django_reverse_admin import ReverseModelAdmin
 #             ),
 #         }),
 #     )
-    
-    
