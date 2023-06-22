@@ -9,5 +9,8 @@ DATABASES = {
         "PASSWORD": config("PASSWORD"),
         "HOST": "localhost",
         "PORT": "3306",
+        "OPTIONS": {
+            "raise_on_warnings": False,
+        },
     }
 }
