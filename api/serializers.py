@@ -7,7 +7,6 @@ from django.contrib.auth.password_validation import validate_password
 from company.models import *
 from document.models import General_Document
 from sites.models import Loa_Template, Site
-from drf_writable_nested.serializers import WritableNestedModelSerializer
 from supply.models import *
 from notes.models import Note
 from reminder.models import Company_Reminder, Site_Reminder, General_Reminder
@@ -118,16 +117,6 @@ class GroupQuoteSerializer(serializers.ModelSerializer):
 
 
 # ============================================================================================
-
-
-class SupplyDetailSerializer(WritableNestedModelSerializer):
-    meter = Meter_Detail_Serialzer()
-    current_supply = Current_supplies_Serializer()
-    new_supply = New_supplies_Serializer()
-
-    class Meta:
-        model = Supplies
-        fields = "__all__"
 
 
 """
