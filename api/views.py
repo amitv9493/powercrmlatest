@@ -66,8 +66,8 @@ class LoginView(APIView):
                 )
 
             return Response(
-                {"errors": {"Non_field_errors": ["email or password is not valid"]}},
-                status=status.HTTP_404_NOT_FOUND,
+                {"errors": {"Non_field_errors": ["username or password is not valid"]}},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -30,3 +30,12 @@ class Loa_Template_Serializers(serializers.ModelSerializer):
     class Meta:
         model = Loa_Template
         fields = ("id", "name", "template")
+
+'''#######################################################
+                  Group_Name_Serializers
+########################################################'''
+
+class Group_Name_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = group
+        fields = ("id", "group_name")

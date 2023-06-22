@@ -43,3 +43,14 @@ class Loa_Template_View(generics.ListAPIView):
     permission_classes = [DjangoModelPermissions, IsAdminUser]
     queryset = Loa_Template.objects.all()
     serializer_class = Loa_Template_Serializers
+
+    
+'''#######################################################
+                  Group_Name_View
+########################################################'''
+
+class Group_Name_View(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [DjangoModelPermissions, IsAdminUser]
+    queryset = group.objects.all()
+    serializer_class = Group_Name_Serializers
