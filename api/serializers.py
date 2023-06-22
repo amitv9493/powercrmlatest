@@ -13,6 +13,10 @@ from notes.models import Note
 from reminder.models import Company_Reminder, Site_Reminder, General_Reminder
 from quoting.models import Generate_Quote, Quoting_Settings, Generate_Group_Quote
 from document.models import Company_Document, Site_Document
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+#
 
 
 class UserModel_Serializer(serializers.ModelSerializer):
