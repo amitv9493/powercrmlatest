@@ -3,7 +3,7 @@ from decouple import config
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE": "mysql.connector.django",
         "NAME": config("NAME"),
         "USER": config("USER"),
         "PASSWORD": config("PASSWORD"),
