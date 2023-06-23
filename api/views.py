@@ -23,7 +23,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser
 
 from rest_framework.filters import SearchFilter
-
+from .paginator import CustomPagination
 # Create your views here.
 
 
@@ -146,6 +146,7 @@ class Company_RUD_View(generics.RetrieveUpdateDestroyAPIView):
 class Site_view(generics.ListCreateAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Serializer
+    pagination_class = CustomPagination
     filter_backends = [SearchFilter, DjangoFilterBackend]
     filterset_fields = ["group_name", "company", "support_contact", "loa_template"]
     search_fields = [
