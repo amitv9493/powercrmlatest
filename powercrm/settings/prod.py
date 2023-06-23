@@ -15,4 +15,4 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS")
+ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
