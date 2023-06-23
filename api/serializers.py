@@ -43,7 +43,15 @@ class Site_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Site
         fields = "__all__"
+        depth = 1
 
+class Site_Create_Serializer(serializers.ModelSerializer):
+    # general_details = serializers.SerializerMethodField()
+
+    # support_contact = UserModel_Serializer()
+    class Meta:
+        model = Site
+        fields = "__all__"
 
 class Meter_Detail_Serialzer(serializers.ModelSerializer):
     class Meta:

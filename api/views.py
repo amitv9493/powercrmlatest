@@ -166,6 +166,11 @@ class Site_view(generics.ListCreateAPIView):
         "agent_email"
     ]
 
+
+class Site_Create_view(generics.CreateAPIView):
+    queryset = Site.objects.all()
+    serializer_class = Site_Create_Serializer
+
 class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Serializer

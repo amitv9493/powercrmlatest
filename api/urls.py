@@ -24,6 +24,7 @@ urlpatterns = [
     path("company/<int:pk>/", Company_RUD_View.as_view()),
     # SITES VIEW
     path("site/", Site_view.as_view()),
+    path("site/create/", Site_Create_view.as_view()),
     path("site/<int:pk>/", Site_RUD_View.as_view()),
     path("users/", AllUsers_view.as_view()),
     # SUPPLY VIEWS
