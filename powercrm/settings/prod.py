@@ -13,3 +13,7 @@ DATABASES = {
 }
 
 STATIC_ROOT = config("STATIC_ROOT")
+
+MEDIA_ROOT = config("MEDIA_ROOT")
+
+MEDIA_URL = config("MEDIA_URL")
