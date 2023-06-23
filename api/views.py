@@ -22,8 +22,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser
 
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginator import CustomPagination
+
 # Create your views here.
 
 
@@ -147,7 +148,8 @@ class Site_view(generics.ListCreateAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Serializer
     pagination_class = CustomPagination
-    filter_backends = [SearchFilter, DjangoFilterBackend]
+    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
+    ordering_fields = ["date_created"]
     filterset_fields = ["group_name", "company", "support_contact", "loa_template"]
     search_fields = [
         "parent_company",
