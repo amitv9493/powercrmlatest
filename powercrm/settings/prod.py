@@ -5,11 +5,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": config("NAME"),
-        "USER": config("USER"),
+        "USER": "aumhnwbf_root",
         "PASSWORD": config("PASSWORD"),
         "HOST": "localhost",
         "PORT": "3306",
     }
 }
-
-# ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
