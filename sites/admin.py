@@ -1,10 +1,12 @@
 from django.contrib import admin
 
-from .models import Loa_Template, Site
+from .models import Loa_Template, Site, group
 
 
 @admin.register(Site)
 class SiteAdmin(admin.ModelAdmin):
+    date_hierarchy = "date_created"
+    ordering = ["-date_created"]
     list_display = (
         "id",
         "group_name",
@@ -14,7 +16,6 @@ class SiteAdmin(admin.ModelAdmin):
         "type_of_owner",
         "owner_name",
         "current_gas_and_electricity_supplier_details",
-        
         "site_reference",
         "support_contact",
         "lead_source",
@@ -24,6 +25,7 @@ class SiteAdmin(admin.ModelAdmin):
         "welcome_letter_send",
         "agent_email",
         "loa_header_to_use",
+        "date_created",
         # "loa_template",
     )
     list_filter = (
@@ -107,7 +109,14 @@ class SiteAdmin(admin.ModelAdmin):
 
 @admin.register(Loa_Template)
 class Loa_TemplateAdmin(admin.ModelAdmin):
-    list_display = ('id','name', 'template',)
-    list_filter= ['name']
+    list_display = (
+        "id",
+        "name",
+        "template",
+    )
+    list_filter = ["name"]
 
 
+@admin.register(group)
+class groupAdmin(admin.ModelAdmin):
+    pass
