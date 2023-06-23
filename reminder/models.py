@@ -6,9 +6,7 @@ from django.utils import timezone
 
 # Create your models here.
 class General_Reminder(models.Model):
-    alert = models.DateTimeField(
-        _("Alert Date and Time "), default=datetime.datetime.today()
-    )
+    alert = models.DateTimeField(_("Alert Date and Time "), null=True, blank=True)
     priority = models.IntegerField()
 
     class reminder(models.TextChoices):
@@ -34,7 +32,9 @@ class Company_Reminder(models.Model):
         "company.Company", verbose_name=_("Select Company"), on_delete=models.CASCADE
     )
     alert = models.DateTimeField(
-        _("Alert Date and Time "), default=datetime.datetime.today()
+        _("Alert Date and Time "),
+        null=True,
+        blank=True,
     )
     priority = models.IntegerField()
 
@@ -61,7 +61,9 @@ class Site_Reminder(models.Model):
         "sites.Site", verbose_name=_("Select Site"), on_delete=models.CASCADE
     )
     alert = models.DateTimeField(
-        _("Alert Date and Time "), default=datetime.datetime.today()
+        _("Alert Date and Time "),
+        null=True,
+        blank=True,
     )
     priority = models.IntegerField()
 

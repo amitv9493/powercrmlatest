@@ -19,17 +19,20 @@ class Loa_Template(models.Model):
     def __str__(self):
         return self.name
 
+
 class group(models.Model):
     group_name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.group_name
 
+
 class Site(models.Model):
     # Site Detail
     group_name = models.ForeignKey(
-        group, on_delete=models.SET_NULL, null=True, blank=True)
-     
+        group, on_delete=models.SET_NULL, null=True, blank=True
+    )
+
     parent_company = models.CharField(
         max_length=128,
         null=True,
@@ -122,6 +125,12 @@ class Site(models.Model):
         Loa_Template,
         verbose_name=_("LOA Template"),
         on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
+    date_created = models.DateTimeField(
+        auto_now_add=True,
         null=True,
         blank=True,
     )
