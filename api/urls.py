@@ -10,7 +10,7 @@ router.register("company-document", CompanyDocumentView, basename="company-docum
 urlpatterns = [
     # """ROUTERS"""
     path("sites/", include("sites.urls")),
-    path("company/", include("company.urls")),
+    # path("company/", include("company.urls")),
     # ======================================================
     path("registration/", RegistrationView.as_view(), name="registration"),
     path("login/", LoginView.as_view(), name="loginview"),
