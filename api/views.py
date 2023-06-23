@@ -150,6 +150,7 @@ class Site_view(generics.ListCreateAPIView):
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
     ordering_fields = ["date_created"]
+    ordering = ["-date_created"]
     filterset_fields = ["group_name", "company", "support_contact", "loa_template"]
     search_fields = [
         "parent_company",
