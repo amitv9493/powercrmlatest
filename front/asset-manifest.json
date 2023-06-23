@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/powercrmlatest/static/css/main.402abc03.css",
+    "main.js": "/powercrmlatest/static/js/main.9b0d2d17.js",
+    "static/js/787.28cb0dcd.chunk.js": "/powercrmlatest/static/js/787.28cb0dcd.chunk.js",
+    "static/media/enquiry.svg": "/powercrmlatest/static/media/enquiry.7b8e68634cb26885a021c2ac1b61fbac.svg",
+    "index.html": "/powercrmlatest/index.html",
+    "main.402abc03.css.map": "/powercrmlatest/static/css/main.402abc03.css.map",
+    "main.9b0d2d17.js.map": "/powercrmlatest/static/js/main.9b0d2d17.js.map",
+    "787.28cb0dcd.chunk.js.map": "/powercrmlatest/static/js/787.28cb0dcd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.402abc03.css",
+    "static/js/main.9b0d2d17.js"
+  ]
+}
