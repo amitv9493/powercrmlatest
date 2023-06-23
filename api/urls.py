@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
 
@@ -8,6 +8,10 @@ router.register("site-document", SiteDocumentView, basename="site-document")
 router.register("company-document", CompanyDocumentView, basename="company-document")
 
 urlpatterns = [
+    # """ROUTERS"""
+    path("sites/", include("sites.urls")),
+    path("company/", include("company.urls")),
+    # ======================================================
     path("registration/", RegistrationView.as_view(), name="registration"),
     path("login/", LoginView.as_view(), name="loginview"),
     path("profile/", ProfileView.as_view(), name="profileview"),
