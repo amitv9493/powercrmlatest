@@ -27,14 +27,6 @@ from rest_framework.filters import SearchFilter
 # Create your views here.
 
 
-from knox.views import LoginView as KnoxLoginView
-from rest_framework.authentication import BasicAuthentication
-
-
-class LoginView(KnoxLoginView):
-    authentication_classes = [BasicAuthentication]
-
-
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
 
