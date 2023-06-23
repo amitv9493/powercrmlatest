@@ -23,7 +23,16 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser
 
 from rest_framework.filters import SearchFilter
+
 # Create your views here.
+
+
+from knox.views import LoginView as KnoxLoginView
+from rest_framework.authentication import BasicAuthentication
+
+
+class LoginView(KnoxLoginView):
+    authentication_classes = [BasicAuthentication]
 
 
 def get_tokens_for_user(user):
@@ -146,12 +155,7 @@ class Site_view(generics.ListCreateAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Serializer
     filter_backends = [SearchFilter, DjangoFilterBackend]
-    filterset_fields = [
-        'group_name',
-        'company',
-        'support_contact',
-        'loa_template'
-    ]
+    filterset_fields = ["group_name", "company", "support_contact", "loa_template"]
     search_fields = [
         "parent_company",
         "site_name",
@@ -163,13 +167,14 @@ class Site_view(generics.ListCreateAPIView):
         "country_billing",
         "site_reference",
         "lead_source",
-        "agent_email"
+        "agent_email",
     ]
 
 
 class Site_Create_view(generics.CreateAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Create_Serializer
+
 
 class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     queryset = Site.objects.all()

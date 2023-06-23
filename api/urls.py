@@ -1,8 +1,10 @@
 from django.urls import path, include
+
 from rest_framework.routers import DefaultRouter
 from .views import *
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from .views import LoginView
 
 router = DefaultRouter()
 router.register("general-document", GeneralDocumentView, basename="general-document")
@@ -10,6 +12,7 @@ router.register("site-document", SiteDocumentView, basename="site-document")
 router.register("company-document", CompanyDocumentView, basename="company-document")
 
 urlpatterns = [
+    path(r"login/", LoginView.as_view(), name="knox_login"),
     # """ROUTERS"""
     path("sites/", include("sites.urls")),
     # path("company/", include("company.urls")),
@@ -17,6 +20,7 @@ urlpatterns = [
     path("registration/", RegistrationView.as_view(), name="registration"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("login/", LoginView.as_view(), name="loginview"),
+    # path("login/", LoginView.as_view(), name="loginview"),
     path("profile/", ProfileView.as_view(), name="profileview"),
     path("changepassword/", ChangePasswordView.as_view(), name="change-password"),
     path("resetpassword/", SendPasswordResetView.as_view(), name="reset-password"),

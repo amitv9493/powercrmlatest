@@ -14,4 +14,9 @@ DATABASES = {
 
 INSTALLED_APPS += [
     "django_extensions",
+    "knox",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
+}
