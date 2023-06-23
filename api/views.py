@@ -22,6 +22,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser
 
+from rest_framework.filters import SearchFilter
 # Create your views here.
 
 
@@ -144,7 +145,26 @@ class Company_RUD_View(generics.RetrieveUpdateDestroyAPIView):
 class Site_view(generics.ListCreateAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Serializer
-
+    filter_backends = [SearchFilter, DjangoFilterBackend]
+    filterset_fields = [
+        'group_name',
+        'company',
+        'support_contact',
+        'loa_template'
+    ]
+    search_fields = [
+        "parent_company",
+        "site_name",
+        "type_of_owner",
+        "owner_name",
+        "postcode_site",
+        "country_site",
+        "postcode_billing",
+        "country_billing",
+        "site_reference",
+        "lead_source",
+        "agent_email"
+    ]
 
 class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     queryset = Site.objects.all()
