@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/powercrmlatest/static/css/main.402abc03.css",
-    "main.js": "/powercrmlatest/static/js/main.9b0d2d17.js",
-    "static/js/787.28cb0dcd.chunk.js": "/powercrmlatest/static/js/787.28cb0dcd.chunk.js",
-    "static/media/enquiry.svg": "/powercrmlatest/static/media/enquiry.7b8e68634cb26885a021c2ac1b61fbac.svg",
-    "index.html": "/powercrmlatest/index.html",
-    "main.402abc03.css.map": "/powercrmlatest/static/css/main.402abc03.css.map",
-    "main.9b0d2d17.js.map": "/powercrmlatest/static/js/main.9b0d2d17.js.map",
-    "787.28cb0dcd.chunk.js.map": "/powercrmlatest/static/js/787.28cb0dcd.chunk.js.map"
+    "main.css": "./static/css/main.402abc03.css",
+    "main.js": "./static/js/main.14afee6c.js",
+    "static/js/787.28cb0dcd.chunk.js": "./static/js/787.28cb0dcd.chunk.js",
+    "static/media/enquiry.svg": "./static/media/enquiry.7b8e68634cb26885a021c2ac1b61fbac.svg",
+    "index.html": "./index.html",
+    "main.402abc03.css.map": "./static/css/main.402abc03.css.map",
+    "main.14afee6c.js.map": "./static/js/main.14afee6c.js.map",
+    "787.28cb0dcd.chunk.js.map": "./static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.402abc03.css",
-    "static/js/main.9b0d2d17.js"
+    "static/js/main.14afee6c.js"
   ]
 }

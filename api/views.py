@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import (
@@ -26,6 +26,11 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginator import CustomPagination
 
 # Create your views here.
+
+
+def front(request):
+    context = {}
+    return render(request, "index.html", context)
 
 
 def get_tokens_for_user(user):

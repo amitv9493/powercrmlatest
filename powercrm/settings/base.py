@@ -2,6 +2,7 @@ from pathlib import Path
 
 from decouple import config
 
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,6 +16,11 @@ AUTH_USER_MODEL = "users.User"
 
 ALLOWED_HOSTS = ["*"]
 
+
+REAL_BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# print(REAL_BASE_DIR)
+STATICFILES_DIRS = [REAL_BASE_DIR / "front" / "static"]
 INSTALLED_APPS = [
     "jazzmin",
     "django.contrib.admin",
@@ -58,7 +64,7 @@ ROOT_URLCONF = "powercrm.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(REAL_BASE_DIR, "front")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
