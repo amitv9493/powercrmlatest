@@ -1,6 +1,7 @@
 from .base import *
 from decouple import config
 
+DEBUG = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",

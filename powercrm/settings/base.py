@@ -8,8 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 
-DEBUG = config("DEBUG")
-
 STATIC_URL = config("STATIC_URL")
 
 AUTH_USER_MODEL = "users.User"
