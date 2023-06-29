@@ -56,38 +56,38 @@ class Site(models.Model):
         default=False,
     )
     # Site_address
-    postcode_site = models.CharField(_("Postcode"), max_length=128, blank=True)
-    addressline1_site = models.CharField(
-        _("address line 1"), max_length=128, blank=True
-    )
-    addressline2_site = models.CharField(
-        _("address line 2"), max_length=128, null=True, blank=True
-    )
-    addressline3_site = models.CharField(
-        _("address line 3"), max_length=128, null=True, blank=True
-    )
-    addressline4_site = models.CharField(
-        _("address line 4"), max_length=128, null=True, blank=True
-    )
-    country_site = models.CharField(
-        _("Country"), max_length=128, blank=True
-    )  # dropdown
+    # postcode_site = models.CharField(_("Postcode"), max_length=128, blank=True)
+    # addressline1_site = models.CharField(
+    #     _("address line 1"), max_length=128, blank=True
+    # )
+    # addressline2_site = models.CharField(
+    #     _("address line 2"), max_length=128, null=True, blank=True
+    # )
+    # addressline3_site = models.CharField(
+    #     _("address line 3"), max_length=128, null=True, blank=True
+    # )
+    # addressline4_site = models.CharField(
+    #     _("address line 4"), max_length=128, null=True, blank=True
+    # )
+    # country_site = models.CharField(
+    #     _("Country"), max_length=128, blank=True
+    # )  # dropdown
 
     # Billing_address
-    postcode_billing = models.CharField(_("Postcode"), max_length=128, blank=True)
-    addressline1_billing = models.CharField(
-        _("addressline 1"), max_length=128, blank=True
-    )
-    addressline2_billing = models.CharField(
-        _("addressline 2"), max_length=128, null=True, blank=True
-    )
-    addressline3_billing = models.CharField(
-        _("addressline 3"), max_length=128, null=True, blank=True
-    )
-    addressline4_billing = models.CharField(
-        _("addressline 4"), max_length=128, null=True, blank=True
-    )
-    country_billing = models.CharField(_("Country"), max_length=128, blank=True)  #
+    # postcode_billing = models.CharField(_("Postcode"), max_length=128, blank=True)
+    # addressline1_billing = models.CharField(
+    #     _("addressline 1"), max_length=128, blank=True
+    # )
+    # addressline2_billing = models.CharField(
+    #     _("addressline 2"), max_length=128, null=True, blank=True
+    # )
+    # addressline3_billing = models.CharField(
+    #     _("addressline 3"), max_length=128, null=True, blank=True
+    # )
+    # addressline4_billing = models.CharField(
+    #     _("addressline 4"), max_length=128, null=True, blank=True
+    # )
+    # country_billing = models.CharField(_("Country"), max_length=128, blank=True)  #
 
     # Our_detail
     class lead_type_choices(models.TextChoices):
@@ -137,3 +137,43 @@ class Site(models.Model):
 
     def __str__(self):
         return self.site_name
+
+
+class SiteAddress(models.Model):
+    site = models.OneToOneField(Site, verbose_name=_("Site"), on_delete=models.CASCADE)
+
+    addressline1 = models.CharField(_("address line 1"), max_length=128, blank=True)
+    addressline2 = models.CharField(
+        _("address line 2"), max_length=128, null=True, blank=True
+    )
+    addressline3 = models.CharField(
+        _("address line 3"), max_length=128, null=True, blank=True
+    )
+    addressline4 = models.CharField(
+        _("address line 4"), max_length=128, null=True, blank=True
+    )
+    country = models.CharField(_("Country"), max_length=128, blank=True)
+    postcode_site = models.CharField(_("Postcode"), max_length=128, blank=True)
+
+    def __str__(self):
+        return self.site.site_name
+
+
+class BillingAddress(models.Model):
+    site = models.OneToOneField(Site, verbose_name=_("Site"), on_delete=models.CASCADE)
+
+    addressline1 = models.CharField(_("address line 1"), max_length=128, blank=True)
+    addressline2 = models.CharField(
+        _("address line 2"), max_length=128, null=True, blank=True
+    )
+    addressline3 = models.CharField(
+        _("address line 3"), max_length=128, null=True, blank=True
+    )
+    addressline4 = models.CharField(
+        _("address line 4"), max_length=128, null=True, blank=True
+    )
+    country = models.CharField(_("Country"), max_length=128, blank=True)
+    postcode_site = models.CharField(_("Postcode"), max_length=128, blank=True)
+
+    def __str__(self):
+        return self.site.site_name
