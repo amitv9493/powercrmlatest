@@ -12,7 +12,6 @@ router.register("site-document", SiteDocumentView, basename="site-document")
 router.register("company-document", CompanyDocumentView, basename="company-document")
 
 urlpatterns = [
-    path(r"login/", LoginView.as_view(), name="knox_login"),
     # """ROUTERS"""
     path("sites/", include("sites.urls")),
     # path("company/", include("company.urls")),

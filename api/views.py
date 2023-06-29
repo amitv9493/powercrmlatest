@@ -24,6 +24,8 @@ from rest_framework.parsers import MultiPartParser
 
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginator import CustomPagination
+from rest_framework.permissions import IsAuthenticated
+
 
 # Create your views here.
 
@@ -58,6 +60,9 @@ class RegistrationView(APIView):
 
 
 class LoginView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
     def post(self, request, format=None):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -78,9 +83,6 @@ class LoginView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-from rest_framework.permissions import IsAuthenticated
 
 
 class ProfileView(APIView):
