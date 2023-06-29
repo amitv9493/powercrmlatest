@@ -142,7 +142,7 @@ class Site(models.Model):
 class SiteAddress(models.Model):
     site = models.OneToOneField(Site, verbose_name=_("Site"), on_delete=models.CASCADE)
 
-    addressline1 = models.CharField(_("address line 1"), max_length=128, blank=True)
+    addressline1 = models.CharField(_("address line 1"), max_length=128)
     addressline2 = models.CharField(
         _("address line 2"), max_length=128, null=True, blank=True
     )
@@ -152,8 +152,8 @@ class SiteAddress(models.Model):
     addressline4 = models.CharField(
         _("address line 4"), max_length=128, null=True, blank=True
     )
-    country = models.CharField(_("Country"), max_length=128, blank=True)
-    postcode_site = models.CharField(_("Postcode"), max_length=128, blank=True)
+    country = models.CharField(_("Country"), max_length=128)
+    postcode = models.CharField(_("Postcode"), max_length=128)
 
     def __str__(self):
         return self.site.site_name
@@ -162,7 +162,7 @@ class SiteAddress(models.Model):
 class BillingAddress(models.Model):
     site = models.OneToOneField(Site, verbose_name=_("Site"), on_delete=models.CASCADE)
 
-    addressline1 = models.CharField(_("address line 1"), max_length=128, blank=True)
+    addressline1 = models.CharField(_("address line 1"), max_length=128)
     addressline2 = models.CharField(
         _("address line 2"), max_length=128, null=True, blank=True
     )
@@ -172,8 +172,8 @@ class BillingAddress(models.Model):
     addressline4 = models.CharField(
         _("address line 4"), max_length=128, null=True, blank=True
     )
-    country = models.CharField(_("Country"), max_length=128, blank=True)
-    postcode_site = models.CharField(_("Postcode"), max_length=128, blank=True)
+    country = models.CharField(_("Country"), max_length=128)
+    postcode = models.CharField(_("Postcode"), max_length=128)
 
     def __str__(self):
         return self.site.site_name
