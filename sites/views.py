@@ -57,6 +57,7 @@ class Loa_Template_View(generics.ListAPIView):
 class Group_Name_View(ModelViewSet):
     # authentication_classes = [JWTAuthentication]
     # permission_classes = [DjangoModelPermissions, IsAdminUser]
+    pagination_class = []
     queryset = group.objects.all()
     serializer_class = Group_Name_Serializers
 
