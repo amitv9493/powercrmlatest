@@ -6,6 +6,9 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 
 router.register(prefix="get/groups", viewset=Group_Name_View, basename="group")
+router.register("get/siteaddress", SiteAddressViewset, basename="site-address")
+router.register("get/billingaddress", BillingAddressViewset, basename="billing-address")
+
 
 urlpatterns = [
     path("get/company_name/", Company_Name_View.as_view(), name="Company_Name_View"),
@@ -15,6 +18,4 @@ urlpatterns = [
         name="Support_Contact_View",
     ),
     path("get/loa_template/", Loa_Template_View.as_view(), name="Loa_Template_View"),
-    # router.urls,
-    # path("get/group_name/", Group_Name_View.as_view(), name="Group_Name_View"),
 ] + router.urls

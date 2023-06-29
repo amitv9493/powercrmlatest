@@ -1,10 +1,19 @@
 from django.contrib import admin
 
-from .models import Loa_Template, Site, group
+from .models import *
+
+
+class BillingAddressInline(admin.StackedInline):
+    model = BillingAddress
+
+
+class SiteAddressInline(admin.StackedInline):
+    model = SiteAddress
 
 
 @admin.register(Site)
 class SiteAdmin(admin.ModelAdmin):
+    inlines = [BillingAddressInline, SiteAddressInline]
     date_hierarchy = "date_created"
     ordering = ["-date_created"]
     list_display = (
@@ -51,32 +60,6 @@ class SiteAdmin(admin.ModelAdmin):
                     "vacant",
                     "change_of_tenancy",
                     "customer_consent",
-                ),
-            },
-        ),
-        (
-            "Site Address",
-            {
-                "fields": (
-                    "postcode_site",
-                    "addressline1_site",
-                    "addressline2_site",
-                    "addressline3_site",
-                    "addressline4_site",
-                    "country_site",
-                ),
-            },
-        ),
-        (
-            "Billing Address",
-            {
-                "fields": (
-                    "postcode_billing",
-                    "addressline1_billing",
-                    "addressline2_billing",
-                    "addressline3_billing",
-                    "addressline4_billing",
-                    "country_billing",
                 ),
             },
         ),

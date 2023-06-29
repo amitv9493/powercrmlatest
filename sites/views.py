@@ -59,3 +59,13 @@ class Group_Name_View(ModelViewSet):
     # permission_classes = [DjangoModelPermissions, IsAdminUser]
     queryset = group.objects.all()
     serializer_class = Group_Name_Serializers
+
+
+class SiteAddressViewset(ModelViewSet):
+    queryset = SiteAddress.objects.all()
+    serializer_class = SiteAddressSerializer
+
+
+class BillingAddressViewset(ModelViewSet):
+    queryset = BillingAddress.objects.all()
+    serializer_class = BillingAddressSerializer
