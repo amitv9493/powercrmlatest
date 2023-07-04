@@ -23,6 +23,7 @@ class Company_Name_View(generics.ListAPIView):
     permission_classes = [DjangoModelPermissions, IsAdminUser]
     queryset = Company.objects.all()
     serializer_class = Company_Name_Serializers
+    pagination_class = None
 
 
 """#######################################################
