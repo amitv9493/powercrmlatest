@@ -107,7 +107,12 @@ class Site(models.Model):
 
 
 class SiteAddress(models.Model):
-    site = models.OneToOneField(Site, verbose_name=_("Site"), on_delete=models.CASCADE)
+    site = models.OneToOneField(
+        Site,
+        verbose_name=_("Site"),
+        on_delete=models.CASCADE,
+        related_name="site_address",
+    )
 
     addressline1 = models.CharField(_("address line 1"), max_length=128)
     addressline2 = models.CharField(
@@ -127,7 +132,12 @@ class SiteAddress(models.Model):
 
 
 class BillingAddress(models.Model):
-    site = models.OneToOneField(Site, verbose_name=_("Site"), on_delete=models.CASCADE)
+    site = models.OneToOneField(
+        Site,
+        verbose_name=_("Site"),
+        on_delete=models.CASCADE,
+        related_name="billing_address",
+    )
 
     addressline1 = models.CharField(_("address line 1"), max_length=128)
     addressline2 = models.CharField(

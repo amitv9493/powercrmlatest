@@ -15,6 +15,7 @@ from quoting.models import Generate_Quote, Quoting_Settings, Generate_Group_Quot
 from document.models import Company_Document, Site_Document
 from django.contrib.auth import get_user_model
 from drf_writable_nested.serializers import WritableNestedModelSerializer
+from sites.serializers import BillingAddressSerializer, SiteAddressSerializer
 
 User = get_user_model()
 #
@@ -37,6 +38,8 @@ class Company_Serializer(serializers.ModelSerializer):
 
 
 class Site_Serializer(serializers.ModelSerializer):
+    billing_address = BillingAddressSerializer()
+    site_address = SiteAddressSerializer()
     # general_details = serializers.SerializerMethodField()
 
     # support_contact = UserModel_Serializer()
@@ -45,6 +48,7 @@ class Site_Serializer(serializers.ModelSerializer):
         fields = "__all__"
         depth = 1
 
+
 class Site_Create_Serializer(serializers.ModelSerializer):
     # general_details = serializers.SerializerMethodField()
 
@@ -52,6 +56,7 @@ class Site_Create_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Site
         fields = "__all__"
+
 
 class Meter_Detail_Serialzer(serializers.ModelSerializer):
     class Meta:

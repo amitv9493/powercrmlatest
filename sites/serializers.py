@@ -50,10 +50,25 @@ class Group_Name_Serializers(serializers.ModelSerializer):
 class SiteAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteAddress
-        fields = "__all__"
+
+        fields = (
+            "addressline1",
+            "addressline2",
+            "addressline3",
+            "addressline4",
+            "postcode",
+            "country",
+        )
 
 
 class BillingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = BillingAddress
-        fields = "__all__"
+        fields = (
+            "addressline1",
+            "addressline2",
+            "addressline3",
+            "addressline4",
+            "postcode",
+            "country",
+        )
