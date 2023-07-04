@@ -35,6 +35,7 @@ class Support_Contact_View(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [DjangoModelPermissions, IsAdminUser]
     queryset = User.objects.all()
+    pagination_class = None
     serializer_class = Support_Contact_Serializers
 
 
