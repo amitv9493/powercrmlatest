@@ -49,6 +49,7 @@ class Loa_Template_View(generics.ListAPIView):
     permission_classes = [DjangoModelPermissions, IsAdminUser]
     queryset = Loa_Template.objects.all()
     serializer_class = Loa_Template_Serializers
+    pagination_class = None
 
 
 """#######################################################
