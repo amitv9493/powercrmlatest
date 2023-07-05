@@ -181,7 +181,7 @@ class Site_Create_view(generics.CreateAPIView):
 
 class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     queryset = Site.objects.all()
-    serializer_class = Site_Serializer
+    serializer_class = Site_Create_Serializer
 
 
 class AllUsers_view(generics.ListAPIView):
