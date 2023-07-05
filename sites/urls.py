@@ -11,6 +11,9 @@ router.register("get/billingaddress", BillingAddressViewset, basename="billing-a
 
 
 urlpatterns = [
+    path("get/site/", Site_view.as_view()),
+    path("create/site/", Site_Create_view.as_view()),
+    path("update/site/<int:pk>/", Site_RUD_View.as_view()),
     path("get/company_name/", Company_Name_View.as_view(), name="Company_Name_View"),
     path(
         "get/support_contact/",

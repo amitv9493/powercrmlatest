@@ -15,8 +15,6 @@ from quoting.models import Generate_Quote, Quoting_Settings, Generate_Group_Quot
 from document.models import Company_Document, Site_Document
 from django.contrib.auth import get_user_model
 from drf_writable_nested.serializers import WritableNestedModelSerializer
-from sites.serializers import BillingAddressSerializer, SiteAddressSerializer
-from sites.models import SiteAddress, BillingAddress
 
 User = get_user_model()
 #
@@ -36,61 +34,6 @@ class Company_Serializer(serializers.ModelSerializer):
 
 
 # ====================================================================
-
-
-class Site_Serializer(serializers.ModelSerializer):
-    billing_address = BillingAddressSerializer()
-    site_address = SiteAddressSerializer()
-    # general_details = serializers.SerializerMethodField()
-
-    # support_contact = UserModel_Serializer()
-    class Meta:
-        model = Site
-        fields = "__all__"
-        depth = 1
-
-
-class Site_Create_Serializer(serializers.ModelSerializer):
-    billing_address = BillingAddressSerializer()
-    site_address = SiteAddressSerializer()
-    # general_details = serializers.SerializerMethodField()
-
-    # support_contact = UserModel_Serializer()
-    class Meta:
-        model = Site
-        fields = "__all__"
-
-    def create(self, validated_data):
-        billing_address = validated_data.pop("billing_address")
-        site_address = validated_data.pop("site_address")
-        print(billing_address)
-        print(site_address)
-
-        site = Site.objects.create(**validated_data)
-        SiteAddress.objects.create(site=site, **site_address)
-        BillingAddress.objects.create(site=site, **billing_address)
-
-        return site
-
-    def update(self, instance, validated_data):
-        billing_address_data = validated_data.pop("billing_address", {})
-        site_address_data = validated_data.pop("site_address", {})
-
-        # Update the nested 'site_address' object if data is present
-        site_address_instance = instance.site_address
-        site_address_serializer = self.fields["site_address"]
-        if site_address_data:
-            site_address_serializer.update(site_address_instance, site_address_data)
-
-        # Update the nested 'billing_address' object if data is present
-        billing_address_instance = instance.billing_address
-        billing_address_serializer = self.fields["billing_address"]
-        if billing_address_data:
-            billing_address_serializer.update(
-                billing_address_instance, billing_address_data
-            )
-
-        return super().update(instance, validated_data)
 
 
 class Meter_Detail_Serialzer(serializers.ModelSerializer):

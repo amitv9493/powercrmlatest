@@ -9,6 +9,9 @@ from .models import *
 from company.models import *
 from .serializers import *
 from django.contrib.auth import get_user_model
+from api.paginator import CustomPagination
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 User = get_user_model()
 # Create your views here.
@@ -73,3 +76,41 @@ class SiteAddressViewset(ModelViewSet):
 class BillingAddressViewset(ModelViewSet):
     queryset = BillingAddress.objects.all()
     serializer_class = BillingAddressSerializer
+
+
+"""#######################################################
+                  Site Views
+########################################################"""
+
+
+class Site_view(generics.ListCreateAPIView):
+    queryset = Site.objects.all()
+    serializer_class = Site_Serializer
+    pagination_class = CustomPagination
+    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
+    ordering_fields = ["date_created"]
+    ordering = ["-date_created"]
+    filterset_fields = ["group_name", "company", "support_contact", "loa_template"]
+    search_fields = [
+        "parent_company",
+        "site_name",
+        "type_of_owner",
+        "owner_name",
+        "postcode_site",
+        "country_site",
+        "postcode_billing",
+        "country_billing",
+        "site_reference",
+        "lead_source",
+        "agent_email",
+    ]
+
+
+class Site_Create_view(generics.CreateAPIView):
+    queryset = Site.objects.all()
+    serializer_class = Site_Create_Serializer
+
+
+class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Site.objects.all()
+    serializer_class = Site_Create_Serializer
