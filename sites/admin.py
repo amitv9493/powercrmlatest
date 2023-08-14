@@ -1,6 +1,20 @@
 from django.contrib import admin
-
+from contacts.models import Contacts
 from .models import *
+
+
+class ContactInline(admin.StackedInline):
+    model = Contacts
+    extra = 1
+    fk_name = "site"
+    fields = [
+        "first_name",
+        "last_name",
+        "contact_title",
+        "position",
+        "telephone_number",
+        "email",
+    ]
 
 
 class BillingAddressInline(admin.StackedInline):
@@ -13,7 +27,7 @@ class SiteAddressInline(admin.StackedInline):
 
 @admin.register(Site)
 class SiteAdmin(admin.ModelAdmin):
-    inlines = [BillingAddressInline, SiteAddressInline]
+    inlines = [BillingAddressInline, SiteAddressInline, ContactInline]
     date_hierarchy = "date_created"
     ordering = ["-date_created"]
     list_display = (

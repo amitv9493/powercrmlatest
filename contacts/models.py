@@ -24,7 +24,7 @@ class Contacts(models.Model):
         related_name="company",
     )
     site = models.ForeignKey(
-        "company.Company",
+        "sites.Site",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
