@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "progress",
     "quoting",
     "users",
+    "contacts",
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import Business_type, Company
+from contacts.models import Contacts
 
 
 @admin.register(Business_type)
@@ -9,8 +10,23 @@ class Business_typeAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 
+class ContactInline(admin.StackedInline):
+    model = Contacts
+    extra = 1
+    fk_name = "company"
+    fields = [
+        "first_name",
+        "last_name",
+        "contact_title",
+        "position",
+        "telephone_number",
+        "email",
+    ]
+
+
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
+    inlines = [ContactInline]
     list_display = (
         "name",
         "postcode",
@@ -23,12 +39,6 @@ class CompanyAdmin(admin.ModelAdmin):
         "bank_name",
         "account_no",
         "shortcode",
-        "primary_contact_first_name",
-        "primary_contact_last_name",
-        "contact_title",
-        "primary_contact_position",
-        "telephone_number",
-        "primary_contact_email",
         "partner_name",
         "home_post_code",
         "partner_dob",
@@ -77,26 +87,13 @@ class CompanyAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "Contact Details",
-            {
-                "fields": (
-                    "primary_contact_first_name",
-                    "primary_contact_last_name",
-                    "contact_title",
-                    "primary_contact_position",
-                    "telephone_number",
-                    "primary_contact_email",
-                ),
-            },
-        ),
-        (
             "Partner Details",
             {
                 "fields": (
                     "partner_name",
                     "partner_dob",
                     "address",
-                    'home_post_code',
+                    "home_post_code",
                     "time_at_address_years",
                     "time_at_address_months",
                 )
