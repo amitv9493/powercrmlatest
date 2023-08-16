@@ -27,6 +27,7 @@ class UserModel_Serializer(serializers.ModelSerializer):
 
 
 class Company_Serializer(serializers.ModelSerializer):
+    # contact
     class Meta:
         model = Company
         fields = "__all__"

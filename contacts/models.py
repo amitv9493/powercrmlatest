@@ -16,19 +16,19 @@ class Contacts(models.Model):
         Dr = "Dr", ("Dr")
         pass
 
-    company = models.ForeignKey(
+    company = models.OneToOneField(
         "company.Company",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="company",
+        related_name="contacts",
     )
-    site = models.ForeignKey(
+    site = models.OneToOneField(
         "sites.Site",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="sites",
+        related_name="contacts",
     )
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
@@ -41,8 +41,8 @@ class Contacts(models.Model):
     def get_full_name(self):
         return f"{self.contact_title} {self.first_name} {self.last_name}"
 
-    def __str__(self):
-        return self.get_full_name
+    # def __str__(self):
+    #     return self.get_full_name
 
     class Meta:
         verbose_name_plural = "Contacts"

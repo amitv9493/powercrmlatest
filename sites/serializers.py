@@ -2,7 +2,7 @@ from rest_framework import serializers
 from company.models import *
 from django.contrib.auth.models import User
 from .models import *
-
+from contacts.serializers import ContactSerializer
 
 """#######################################################
                   Company_Name_Serializer
@@ -83,9 +83,8 @@ class BillingAddressSerializer(serializers.ModelSerializer):
 class Site_Serializer(serializers.ModelSerializer):
     billing_address = BillingAddressSerializer()
     site_address = SiteAddressSerializer()
-    # general_details = serializers.SerializerMethodField()
+    contacts = ContactSerializer()
 
-    # support_contact = UserModel_Serializer()
     class Meta:
         model = Site
         fields = "__all__"
@@ -93,39 +92,54 @@ class Site_Serializer(serializers.ModelSerializer):
 
 
 class Site_Create_Serializer(serializers.ModelSerializer):
-    billing_address = BillingAddressSerializer()
-    site_address = SiteAddressSerializer()
+    billing_address = BillingAddressSerializer(required=False)
+    site_address = SiteAddressSerializer(required=False)
+    contacts = ContactSerializer(required=False)
 
     class Meta:
         model = Site
         fields = "__all__"
+        extra_kwargs = {
+            "type_of_owner": {"required": False},
+            "owner_name": {"required": False},
+            "current_gas_and_electricity_supplier_details": {"required": False},
+        }
 
-    def create(self, validated_data):
-        billing_address = validated_data.pop("billing_address")
-        site_address = validated_data.pop("site_address")
-        print(billing_address)
-        print(site_address)
+    # Make type_of_owner fields required=False
 
-        site = Site.objects.create(**validated_data)
-        SiteAddress.objects.create(site=site, **site_address)
-        BillingAddress.objects.create(site=site, **billing_address)
+    # def create(self, validated_data):
+    #     billing_address = validated_data.pop("billing_address")
+    #     site_address = validated_data.pop("site_address")
+    #     print(billing_address)
+    #     print(site_address)
 
-        return site
+    #     site = Site.objects.create(**validated_data)
+    #     SiteAddress.objects.create(site=site, **site_address)
+    #     BillingAddress.objects.create(site=site, **billing_address)
+
+    #     return site
 
     def update(self, instance, validated_data):
         billing_address_data = validated_data.pop("billing_address", {})
+
         site_address_data = validated_data.pop("site_address", {})
 
-        site_address_instance = instance.site_address
-        site_address_serializer = self.fields["site_address"]
-        if site_address_data:
-            site_address_serializer.update(site_address_instance, site_address_data)
+        contact_data = validated_data.pop("contacts", {})
 
-        billing_address_instance = instance.billing_address
-        billing_address_serializer = self.fields["billing_address"]
+        if site_address_data:
+            site_address_serializer = self.fields["site_address"]
+            site_address_serializer.update(instance.site_address, site_address_data)
+
         if billing_address_data:
+            billing_address_serializer = self.fields["billing_address"]
             billing_address_serializer.update(
-                billing_address_instance, billing_address_data
+                instance.billing_address, billing_address_data
             )
 
+        if contact_data:
+            contacts_serializer = self.fields["contacts"]
+            contacts_serializer.update(
+                instance.contacts,
+                contact_data,
+            )
         return super().update(instance, validated_data)
