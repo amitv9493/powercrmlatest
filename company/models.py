@@ -30,7 +30,7 @@ class Company(models.Model):
     )
     estimated_turnover = models.IntegerField()
     is_macro_business = models.BooleanField(_("Is Micro Business?"), default=False)
-    credit_score = models.IntegerField(_("Credit Score"), null=True, blank=True)
+    # credit_score = models.IntegerField(_("Credit Score"), null=True, blank=True)
     sic_code = models.CharField(_("SIC Code "), max_length=50, null=True, blank=True)
 
     # Company address
