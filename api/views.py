@@ -501,6 +501,8 @@ class BusinessTypeView(generics.ListCreateAPIView):
     queryset = Business_type.objects.all()
     serializer_class = BusinessTypeSerializer
 
+    pagination_class = None
+
 
 from rest_framework.parsers import FileUploadParser
 
