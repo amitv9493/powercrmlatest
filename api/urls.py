@@ -70,4 +70,5 @@ urlpatterns = [
     path("new-ele/", NewElectricityProgressView.as_view()),
     path("new-ele/<int:pk>/", NewElectricityProgressIDView.as_view()),
     #
+    path("company-types/", BusinessTypeView.as_view()),
 ] + router.urls

@@ -23,4 +23,3 @@ def Create_Related_Objects(sender, instance, created, **kwargs):
         supply.current_supply = current_supply
         supply.new_supply = new_supply
         supply.save()
-        print(supply)
