@@ -34,7 +34,7 @@ class Contacts(models.Model):
     last_name = models.CharField(max_length=128)
     contact_title = models.CharField(max_length=128, choices=contact_titles.choices)
     position = models.CharField(max_length=128)
-    telephone_number = PhoneNumberField(max_length=128)
+    telephone_number = models.CharField(max_length=14)
     email = models.EmailField(max_length=128)
 
     @property
