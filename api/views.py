@@ -643,17 +643,23 @@ def get_token():
     access_token = response.json().get("access_token")
 
 
+from rest_framework import decorators
+
+
 @api_view(["GET"])
+@decorators.permission_classes([])
+@decorators.authentication_classes([])
 def orders(request):
     def get_orders():
         url = "https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=A21TJRUUN4KGV&CreatedAfter=2019-01-01"
+        sandbox_url = "https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=ATVPDKIKX0DER&CreatedAfter=TEST_CASE_200"
 
         payload = {}
         headers = {
             "x-amz-access-token": access_token,
         }
 
-        response = requests.get(url, headers=headers, data=payload)
+        response = requests.get(sandbox_url, headers=headers, data=payload)
         return response
 
     response = get_orders()
