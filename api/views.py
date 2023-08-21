@@ -663,9 +663,9 @@ class Orders(APIView):
             response = requests.get(sandbox_url, headers=headers, data=payload)
             return response
 
-        response = get_orders()
+        orders = get_orders()
 
-        if not response.status_code == 200:
+        if not orders.status_code == 200:
             get_token()
             orders = get_orders()
 
