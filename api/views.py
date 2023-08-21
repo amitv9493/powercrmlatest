@@ -625,3 +625,41 @@ class NewElectricityProgressView(generics.ListCreateAPIView):
 class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NewElectricityProgressSerializer
     queryset = New_electricity_progress.objects.all()
+
+
+import requests
+
+access_token = ""
+
+
+def get_token():
+    global access_token
+    url = "https://api.amazon.com/auth/o2/token"
+
+    payload = "grant_type=refresh_token&refresh_token=Atzr%7CIwEBIAkcCrxG2X8SaGwxdIz_TZOXPQZdJsolutynjCwcNXeZ3Oagg0K1tVJYY8bBbHux2h75UfGate1G8ndDQYOcd5JymJFu_GE7N2heLxnU6vFVOlITnxLieI9bykuFHlJz2cJULVhIApDq3XAXMxKAHNmy8Eostl7mJVmJJcFsa4AVlJDwrjG0PPV4_Z9PWOUFsKrAgabxJLiPG1DKkCtzRb9zK10iRfN5s4o5Z2K-4d6gjbaDbPiXSDTJGj1vtbkY6TveN8oSNvLKQDX51Rrou5fzqY1RAkTbSDe66ezX4f2ikJylYipYqVZONG69hIpM4h-rwJi2V4AReeQ9oH_YcxQh&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+    response = requests.post(url, headers=headers, data=payload)
+    access_token = response.json().get("access_token")
+
+
+@api_view(["GET"])
+def orders(request):
+    def get_orders():
+        url = "https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=A21TJRUUN4KGV&CreatedAfter=2019-01-01"
+
+        payload = {}
+        headers = {
+            "x-amz-access-token": access_token,
+        }
+
+        response = requests.get(url, headers=headers, data=payload)
+        return response
+
+    response = get_orders()
+
+    if not response.status_code == 200:
+        get_token()
+        orders = get_orders()
+
+    return Response(orders.json(), status=200)
