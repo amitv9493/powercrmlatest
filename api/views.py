@@ -646,9 +646,9 @@ def get_token():
 from rest_framework import decorators
 
 
-@api_view(["GET"])
 @decorators.permission_classes([])
 @decorators.authentication_classes([])
+@api_view(["GET"])
 def orders(request):
     def get_orders():
         url = "https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=A21TJRUUN4KGV&CreatedAfter=2019-01-01"
