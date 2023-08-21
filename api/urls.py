@@ -73,6 +73,6 @@ urlpatterns = [
     path("company-types/", BusinessTypeView.as_view()),
     path(
         "orders/",
-        orders,
+        Orders.as_view(),
     ),
 ] + router.urls
