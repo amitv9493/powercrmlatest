@@ -26,8 +26,12 @@ class UserModel_Serializer(serializers.ModelSerializer):
         fields = ["id", "username"]
 
 
+from contacts.serializers import ContactSerializer
+
+
 class Company_Serializer(serializers.ModelSerializer):
-    # contact
+    contacts = ContactSerializer()
+
     class Meta:
         model = Company
         fields = "__all__"
