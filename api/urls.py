@@ -71,10 +71,7 @@ urlpatterns = [
     path("new-ele/<int:pk>/", NewElectricityProgressIDView.as_view()),
     #
     path("company-types/", BusinessTypeView.as_view()),
-    path(
-        "orders/",
-        Orders.as_view(),
-    ),
+    path("orders/", Orders.as_view(), name="allorders"),
     path("auth/", authenticate_amazon.as_view(), name="authenticate_amazon"),
     path("auth/callback/", save_credentials.as_view(), name="save_credentials"),
 ] + router.urls

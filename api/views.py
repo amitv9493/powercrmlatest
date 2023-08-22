@@ -49,14 +49,12 @@ class RegistrationView(APIView):
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             user = serializer.save()
 
             return Response(
                 {"msg": "Registration successful"}, status=status.HTTP_201_CREATED
             )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -664,58 +662,63 @@ class save_credentials(APIView):
         selling_partner_id = data.get("selling_partner_id")
         state = int(data.get("state"))
 
-        user = get_user_model().objects.get_or_create(id=state)
+        user = get_user_model().objects.get(id=state)
+        print(user)
         user_credentials.objects.create(
-            user=request.user,
+            user=user,
             code=code,
             selling_partner_id=selling_partner_id,
         )
 
-        get_token(request)
-        return Response({"msg": "Credentials saved"}, status=200)
+        get_token(request, user=user)
+        return redirect("allorders")
 
 
 import requests
 
 
-def get_token(request):
+def get_token(request, user=None):
     url = "https://api.amazon.com/auth/o2/token"
 
-    data = user_credentials.get(user=request.user)
-
+    data = user_credentials.objects.filter(user=request.user).first()
     payload = f"grant_type=authorization_code&code={data.code}&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
     response = requests.request("POST", url, headers=headers, data=payload)
 
     token_data = response.json()
+    print(token_data)
     access_token = token_data.get("access_token")
     refresh_token = token_data.get("refresh_token")
     request.session["access_token"] = access_token
     request.session["refresh_token"] = refresh_token
 
+    print(request.session.__dict__)
+
 
 class Orders(APIView):
-    permission_classes = []
-    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [
+        authentication.BasicAuthentication,
+        authentication.SessionAuthentication,
+    ]
 
     def get(self, request, format=None):
-        def get_orders():
-            url = "https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=A21TJRUUN4KGV&CreatedAfter=2019-01-01"
-            sandbox_url = "https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=ATVPDKIKX0DER&CreatedAfter=TEST_CASE_200"
+        get_token(request)
 
-            payload = {}
-            headers = {
-                "x-amz-access-token": request.session["access_token"],
-            }
+        url = "https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=A21TJRUUN4KGV&CreatedAfter=2019-01-01"
+        sandbox_url = "https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=ATVPDKIKX0DER&CreatedAfter=TEST_CASE_200"
+        payload = {}
+        headers = {
+            "x-amz-access-token": request.session["access_token"],
+        }
 
-            response = requests.get(sandbox_url, headers=headers, data=payload)
-            return response
+        response = requests.get(sandbox_url, headers=headers, data=payload)
+        return Response(response.json())
 
-        orders = get_orders()
+        # if not orders.status_code == 200:
+        #     get_token(request)
+        #     orders = get_orders()
 
-        if not orders.status_code == 200:
-            get_token(request)
-            orders = get_orders()
-
+        # return Response(orders.json(), status=200)
         return Response(orders.json(), status=200)

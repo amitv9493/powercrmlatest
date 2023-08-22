@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from company.models import *
+from contacts.models import Contacts
 from document.models import General_Document
 from sites.models import Loa_Template, Site
 from drf_writable_nested.serializers import WritableNestedModelSerializer
@@ -36,6 +37,14 @@ class Company_Serializer(serializers.ModelSerializer):
         model = Company
         fields = "__all__"
         depth = 1
+
+    def create(self, validated_data):
+        contacts = validated_data.pop("contacts")
+        x = super().create(validated_data)
+        print(type(x))
+
+        Contacts.objects.create(company=x, **contacts)
+        return x
 
 
 # ====================================================================
