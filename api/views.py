@@ -628,22 +628,66 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
 
 
 import requests
+from django.shortcuts import redirect
 
 access_token = ""
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-def get_token():
-    global access_token
+
+class authenticate_amazon(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    authentication_classes = [
+        authentication.BasicAuthentication,
+        authentication.SessionAuthentication,
+    ]
+
+    def get(self, request):
+        url = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id=amzn1.sp.solution.347ce24e-205f-4419-bdcb-38d42b09c7a4&state={request.user.id}&version=beta"
+
+        return redirect(url)
+
+
+from document.models import user_credentials
+
+
+class save_credentials(APIView):
+    def get(self, request):
+        data = request.query_params
+        code = data.get("spapi_oauth_code")
+        selling_partner_id = data.get("selling_partner_id")
+        state = data.get("state")
+
+        user_credentials.objects.create(
+            user=request.user,
+            code=code,
+            selling_partner_id=selling_partner_id,
+        )
+
+        return Response({"msg": "Credentials saved"}, status=200)
+
+
+import requests
+
+
+def get_token(request):
     url = "https://api.amazon.com/auth/o2/token"
 
-    payload = "grant_type=refresh_token&refresh_token=Atzr%7CIwEBIAkcCrxG2X8SaGwxdIz_TZOXPQZdJsolutynjCwcNXeZ3Oagg0K1tVJYY8bBbHux2h75UfGate1G8ndDQYOcd5JymJFu_GE7N2heLxnU6vFVOlITnxLieI9bykuFHlJz2cJULVhIApDq3XAXMxKAHNmy8Eostl7mJVmJJcFsa4AVlJDwrjG0PPV4_Z9PWOUFsKrAgabxJLiPG1DKkCtzRb9zK10iRfN5s4o5Z2K-4d6gjbaDbPiXSDTJGj1vtbkY6TveN8oSNvLKQDX51Rrou5fzqY1RAkTbSDe66ezX4f2ikJylYipYqVZONG69hIpM4h-rwJi2V4AReeQ9oH_YcxQh&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
+    data = user_credentials.get(user=request.user)
+
+    payload = f"grant_type=authorization_code&code={data.code}&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
-    response = requests.post(url, headers=headers, data=payload)
-    access_token = response.json().get("access_token")
+    response = requests.request("POST", url, headers=headers, data=payload)
 
-
-from rest_framework import decorators
+    token_data = response.json()
+    access_token = token_data.get("access_token")
+    refresh_token = token_data.get("refresh_token")
+    request.session["access_token"] = access_token
+    request.session["refresh_token"] = refresh_token
 
 
 class Orders(APIView):
@@ -657,7 +701,7 @@ class Orders(APIView):
 
             payload = {}
             headers = {
-                "x-amz-access-token": access_token,
+                "x-amz-access-token": request.session["access_token"],
             }
 
             response = requests.get(sandbox_url, headers=headers, data=payload)
@@ -665,8 +709,8 @@ class Orders(APIView):
 
         orders = get_orders()
 
-        if not orders.status_code == 200:
-            get_token()
+        if orders.status_code == 403:
+            get_token(request)
             orders = get_orders()
 
         return Response(orders.json(), status=200)
