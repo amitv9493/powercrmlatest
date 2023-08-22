@@ -655,18 +655,23 @@ from document.models import user_credentials
 
 
 class save_credentials(APIView):
+    permission_classes = []
+    authentication_classes = []
+
     def get(self, request):
         data = request.query_params
         code = data.get("spapi_oauth_code")
         selling_partner_id = data.get("selling_partner_id")
-        state = data.get("state")
+        state = int(data.get("state"))
 
+        user = get_user_model().objects.get_or_create(id=state)
         user_credentials.objects.create(
             user=request.user,
             code=code,
             selling_partner_id=selling_partner_id,
         )
 
+        get_token(request)
         return Response({"msg": "Credentials saved"}, status=200)
 
 
@@ -692,7 +697,7 @@ def get_token(request):
 
 class Orders(APIView):
     permission_classes = []
-    authentication_classes = []
+    authentication_classes = [authentication.SessionAuthentication]
 
     def get(self, request, format=None):
         def get_orders():
@@ -709,7 +714,7 @@ class Orders(APIView):
 
         orders = get_orders()
 
-        if orders.status_code == 403:
+        if not orders.status_code == 200:
             get_token(request)
             orders = get_orders()
 

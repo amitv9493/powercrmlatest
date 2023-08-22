@@ -47,7 +47,7 @@ from django.conf import settings
 
 
 class user_credentials(models.Model):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name=_(""), on_delete=models.CASCADE
     )
     code = models.CharField(max_length=255)
