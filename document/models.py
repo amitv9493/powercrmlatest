@@ -51,5 +51,8 @@ class user_credentials(models.Model):
     code = models.CharField(max_length=255)
     selling_partner_id = models.CharField(max_length=255)
 
+    access_token = models.TextField(null=True)
+    refresh_token = models.TextField(null=True)
+
     def __str__(self):
         return str(self.user.username)

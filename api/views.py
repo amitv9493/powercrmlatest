@@ -638,10 +638,7 @@ class authenticate_amazon(APIView):
         IsAuthenticated,
     ]
 
-    authentication_classes = [
-        authentication.BasicAuthentication,
-        authentication.SessionAuthentication,
-    ]
+    # authentication_classes = [JWTAuthentication]
 
     def get(self, request):
         url = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id=amzn1.sp.solution.347ce24e-205f-4419-bdcb-38d42b09c7a4&state={request.user.id}&version=beta"
@@ -661,26 +658,24 @@ class save_credentials(APIView):
         code = data.get("spapi_oauth_code")
         selling_partner_id = data.get("selling_partner_id")
         state = int(data.get("state"))
-
         user = get_user_model().objects.get(id=state)
-        print(user)
-        user_credentials.objects.create(
+
+        user_credentials.objects.get_or_create(
             user=user,
             code=code,
             selling_partner_id=selling_partner_id,
         )
-
-        get_token(request, user=user)
-        return redirect("allorders")
+        get_token(user=user)
+        return Response({"msg": "success"}, status=200)
 
 
 import requests
 
 
-def get_token(request, user=None):
+def get_token(user):
     url = "https://api.amazon.com/auth/o2/token"
 
-    data = user_credentials.objects.filter(user=request.user).first()
+    data = user_credentials.objects.get(user=user)
     payload = f"grant_type=authorization_code&code={data.code}&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
@@ -688,37 +683,34 @@ def get_token(request, user=None):
 
     token_data = response.json()
     print(token_data)
+
     access_token = token_data.get("access_token")
     refresh_token = token_data.get("refresh_token")
-    request.session["access_token"] = access_token
-    request.session["refresh_token"] = refresh_token
+    data.access_token = access_token
+    data.refresh_token = refresh_token
 
-    print(request.session.__dict__)
+    data.save()
 
 
 class Orders(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [
-        authentication.BasicAuthentication,
-        authentication.SessionAuthentication,
-    ]
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request, format=None):
-        get_token(request)
-
         url = "https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=A21TJRUUN4KGV&CreatedAfter=2019-01-01"
         sandbox_url = "https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=ATVPDKIKX0DER&CreatedAfter=TEST_CASE_200"
         payload = {}
+        data = user_credentials.objects.filter(user=request.user).first()
         headers = {
-            "x-amz-access-token": request.session["access_token"],
+            "x-amz-access-token": data.access_token,
         }
 
         response = requests.get(sandbox_url, headers=headers, data=payload)
-        return Response(response.json())
+        # return Response(response.json())
 
-        # if not orders.status_code == 200:
-        #     get_token(request)
-        #     orders = get_orders()
+        if not response.status_code == 200:
+            get_token(request)
+            # orders = get_orders()
 
         # return Response(orders.json(), status=200)
-        return Response(orders.json(), status=200)
+        return Response(response.json(), status=200)
