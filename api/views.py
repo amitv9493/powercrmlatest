@@ -141,7 +141,18 @@ class PasswordResetView(APIView):
 
 class Company_view(generics.ListCreateAPIView):
     queryset = Company.objects.all()
+
     serializer_class = Company_Serializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        queryset = self.queryset
+        pagination_param = self.request.query_params.get("pagination")
+
+        if pagination_param and pagination_param.lower() == "true":
+            return queryset
+        else:
+            return queryset.none()
 
 
 class Company_RUD_View(generics.RetrieveUpdateDestroyAPIView):
@@ -628,7 +639,6 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
 import requests
 from django.shortcuts import redirect
 
-access_token = ""
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -637,8 +647,6 @@ class authenticate_amazon(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
-
-    # authentication_classes = [JWTAuthentication]
 
     def get(self, request):
         url = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id=amzn1.sp.solution.347ce24e-205f-4419-bdcb-38d42b09c7a4&state={request.user.id}&version=beta"
@@ -654,6 +662,9 @@ class save_credentials(APIView):
     authentication_classes = []
 
     def get(self, request):
+        complete_uri = request.build_absolute_uri()
+        print(complete_uri)
+
         data = request.query_params
         code = data.get("spapi_oauth_code")
         selling_partner_id = data.get("selling_partner_id")
