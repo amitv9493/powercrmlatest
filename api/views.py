@@ -145,15 +145,6 @@ class Company_view(generics.ListCreateAPIView):
     serializer_class = Company_Serializer
     pagination_class = CustomPagination
 
-    def get_queryset(self):
-        queryset = self.queryset
-        pagination_param = self.request.query_params.get("pagination")
-
-        if pagination_param and pagination_param.lower() == "true":
-            return queryset
-        else:
-            return queryset.none()
-
 
 class Company_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     queryset = Company.objects.all()
@@ -720,7 +711,7 @@ class Orders(APIView):
         # return Response(response.json())
 
         if not response.status_code == 200:
-            get_token(request)
+            get_token(request.user)
             # orders = get_orders()
 
         # return Response(orders.json(), status=200)
