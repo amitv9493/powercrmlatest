@@ -662,11 +662,10 @@ class save_credentials(APIView):
         state = int(data.get("state"))
         user = get_user_model().objects.get(id=state)
 
-        user_credentials.objects.get_or_create(
-            user=user,
-            code=code,
-            selling_partner_id=selling_partner_id,
-        )
+        cred, _ = user_credentials.objects.get_or_create()
+
+        cred.access_token
+        cred.refresh_token
         get_token(user=user)
         return Response({"msg": "success"}, status=200)
 
@@ -674,11 +673,31 @@ class save_credentials(APIView):
 import requests
 
 
-def get_token(user):
+def get_token_first_time(user):
     url = "https://api.amazon.com/auth/o2/token"
 
     data = user_credentials.objects.get(user=user)
     payload = f"grant_type=authorization_code&code={data.code}&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    token_data = response.json()
+    print(token_data)
+
+    access_token = token_data.get("access_token")
+    refresh_token = token_data.get("refresh_token")
+    data.access_token = access_token
+    data.refresh_token = refresh_token
+
+    data.save()
+
+
+def get_token(user):
+    url = "https://api.amazon.com/auth/o2/token"
+
+    data = user_credentials.objects.get(user=user)
+    payload = f"grant_type=refresh_token&code={data.code}&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
     response = requests.request("POST", url, headers=headers, data=payload)

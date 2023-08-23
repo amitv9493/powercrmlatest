@@ -22,8 +22,6 @@ User = get_user_model()
 
 
 class Company_Name_View(generics.ListAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [DjangoModelPermissions, IsAdminUser]
     queryset = Company.objects.all()
     serializer_class = Company_Name_Serializers
     pagination_class = None

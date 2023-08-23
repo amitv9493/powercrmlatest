@@ -48,8 +48,8 @@ from django.conf import settings
 
 class user_credentials(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    code = models.CharField(max_length=255)
-    selling_partner_id = models.CharField(max_length=255)
+    code = models.CharField(max_length=255, null=True)
+    selling_partner_id = models.CharField(max_length=255, null=True)
 
     access_token = models.TextField(null=True)
     refresh_token = models.TextField(null=True)
