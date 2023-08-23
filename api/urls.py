@@ -14,6 +14,7 @@ router.register("company-document", CompanyDocumentView, basename="company-docum
 urlpatterns = [
     # """ROUTERS"""
     path("sites/", include("sites.urls")),
+    path("multisite/", include("multisite.urls")),
     # path("company/", include("company.urls")),
     # ======================================================
     path("registration/", RegistrationView.as_view(), name="registration"),

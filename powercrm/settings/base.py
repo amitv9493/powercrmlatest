@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "quoting",
     "users",
     "contacts",
+    "multisite",
 ]
 
 MIDDLEWARE = [
