@@ -23,4 +23,4 @@ class Site_DocumentAdmin(admin.ModelAdmin):
 
 @admin.register(user_credentials)
 class user_credentialsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("id", "user", "code", "selling_partner_id", "updated_at")

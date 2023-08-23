@@ -629,6 +629,7 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
 
 import requests
 from django.shortcuts import redirect
+from document.models import user_credentials
 
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -645,9 +646,6 @@ class authenticate_amazon(APIView):
         return redirect(url)
 
 
-from document.models import user_credentials
-
-
 class save_credentials(APIView):
     permission_classes = []
     authentication_classes = []
@@ -660,68 +658,66 @@ class save_credentials(APIView):
         code = data.get("spapi_oauth_code")
         selling_partner_id = data.get("selling_partner_id")
         state = int(data.get("state"))
+
         user = get_user_model().objects.get(id=state)
 
-        cred, _ = user_credentials.objects.get_or_create()
+        cred, _ = user_credentials.objects.get_or_create(user=user)
+        cred.code = code
+        cred.selling_partner_id = selling_partner_id
+        cred.save()
+
+        get_token(user=user, grant_type="authorization_code")
 
         cred.access_token
         cred.refresh_token
-        get_token(user=user)
         return Response({"msg": "success"}, status=200)
 
 
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-def get_token_first_time(user):
+def get_token(user, grant_type):
     url = "https://api.amazon.com/auth/o2/token"
 
-    data = user_credentials.objects.get(user=user)
-    payload = f"grant_type=authorization_code&code={data.code}&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
+    user_data = user_credentials.objects.get(user=user)
+
+    if grant_type == "authorization_code":
+        code = user_data.code
+    elif grant_type == "refresh_token":
+        code = user_data.refresh_token
+
+    payload = f"grant_type={grant_type}&code={code}&client_id={os.getenv('client_id')}&client_secret={os.getenv('client_secret')}"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.post(url, headers=headers, data=payload)
 
     token_data = response.json()
     print(token_data)
 
-    access_token = token_data.get("access_token")
-    refresh_token = token_data.get("refresh_token")
-    data.access_token = access_token
-    data.refresh_token = refresh_token
+    user_data.access_token = token_data.get("access_token")
+    user_data.refresh_token = token_data.get("refresh_token")
 
-    data.save()
-
-
-def get_token(user):
-    url = "https://api.amazon.com/auth/o2/token"
-
-    data = user_credentials.objects.get(user=user)
-    payload = f"grant_type=refresh_token&code={data.code}&client_id=amzn1.application-oa2-client.aec6ad4c7ab84a43bc4600ca88a34cb7&client_secret=amzn1.oa2-cs.v1.7671a0daf6a83c77425a6f4baad35a64a75c7a6c11164733b8df10b8caf0ba98"
-    headers = {"Content-Type": "application/x-www-form-urlencoded"}
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    token_data = response.json()
-    print(token_data)
-
-    access_token = token_data.get("access_token")
-    refresh_token = token_data.get("refresh_token")
-    data.access_token = access_token
-    data.refresh_token = refresh_token
-
-    data.save()
+    user_data.save()
 
 
 class Orders(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
+    authentication_classes = [authentication.BasicAuthentication]
 
     def get(self, request, format=None):
-        url = "https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=A21TJRUUN4KGV&CreatedAfter=2019-01-01"
-        sandbox_url = "https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds=ATVPDKIKX0DER&CreatedAfter=TEST_CASE_200"
-        payload = {}
         data = user_credentials.objects.filter(user=request.user).first()
+        created_after = request.query_params.get("created_after", None)
+        url = f"https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter={created_after}"
+        sandbox_url = f"https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter=TEST_CASE_200"
+        payload = {}
+
+        if not data.valid_token():
+            get_token(request.user, grant_type="refresh_token")
+
         headers = {
             "x-amz-access-token": data.access_token,
         }
@@ -729,9 +725,7 @@ class Orders(APIView):
         response = requests.get(sandbox_url, headers=headers, data=payload)
         # return Response(response.json())
 
-        if not response.status_code == 200:
-            get_token(request.user)
-            # orders = get_orders()
+        # orders = get_orders()
 
         # return Response(orders.json(), status=200)
         return Response(response.json(), status=200)
