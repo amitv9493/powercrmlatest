@@ -55,6 +55,8 @@ class CompanyAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "name",
+                    "parent_company",
+                    "reference",
                     "number_of_employees",
                     "registration_no",
                     "business_type",

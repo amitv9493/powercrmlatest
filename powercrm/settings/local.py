@@ -21,3 +21,9 @@ INSTALLED_APPS += [
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "api.paginator.CustomPagination",
 }
+
+
+CSRF_COOKIE_SAMESITE = "Strict"
+SESSION_COOKIE_SAMESITE = "Strict"
+CSRF_COOKIE_HTTPONLY = False  # False since we will grab it via universal-cookies
+SESSION_COOKIE_HTTPONLY = True

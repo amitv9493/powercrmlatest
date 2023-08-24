@@ -43,9 +43,11 @@ class Site(models.Model):
     company = models.ForeignKey(
         "company.Company", on_delete=models.CASCADE, verbose_name="Company Name"
     )
-    type_of_owner = models.CharField(max_length=128)
+    type_of_owner = models.CharField(max_length=128, null=True, blank=True)
     owner_name = models.CharField(max_length=128)
-    current_gas_and_electricity_supplier_details = models.CharField(max_length=128)
+    current_gas_and_electricity_supplier_details = models.CharField(
+        max_length=128, null=True, blank=True
+    )
     tenant = models.BooleanField(default=True)
     vacant = models.BooleanField(default=False)
     change_of_tenancy = models.BooleanField(_("CoT"), default=False)

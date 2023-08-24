@@ -639,6 +639,7 @@ class authenticate_amazon(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
+    authentication_classes = [authentication.BasicAuthentication]
 
     def get(self, request):
         url = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id=amzn1.sp.solution.347ce24e-205f-4419-bdcb-38d42b09c7a4&state={request.user.id}&version=beta"
@@ -666,10 +667,8 @@ class save_credentials(APIView):
         cred.selling_partner_id = selling_partner_id
         cred.save()
 
-        get_token(user=user, grant_type="authorization_code")
+        get_token(user=user, grant_type="authorization_code", request=None)
 
-        cred.access_token
-        cred.refresh_token
         return Response({"msg": "success"}, status=200)
 
 
@@ -680,17 +679,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_token(user, grant_type):
+def get_token(user, grant_type, request=None):
     url = "https://api.amazon.com/auth/o2/token"
 
     user_data = user_credentials.objects.get(user=user)
 
     if grant_type == "authorization_code":
-        code = user_data.code
+        token = user_data.code
+        type = "code"
     elif grant_type == "refresh_token":
-        code = user_data.refresh_token
+        token = user_data.refresh_token
+        type = "refresh_token"
 
-    payload = f"grant_type={grant_type}&code={code}&client_id={os.getenv('client_id')}&client_secret={os.getenv('client_secret')}"
+    payload = f"grant_type={grant_type}&{type}={token}&client_id={os.getenv('client_id')}&client_secret={os.getenv('client_secret')}"
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
     response = requests.post(url, headers=headers, data=payload)
@@ -698,15 +699,26 @@ def get_token(user, grant_type):
     token_data = response.json()
     print(token_data)
 
+    if token_data.get("error"):
+        return Response(token_data, status=400)
+
     user_data.access_token = token_data.get("access_token")
     user_data.refresh_token = token_data.get("refresh_token")
 
     user_data.save()
 
 
+def set_session_token(request, user_data):
+    request.session["access_token"] = user_data.access_token
+
+
 class Orders(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [authentication.BasicAuthentication]
+    authentication_classes = [
+        # JWTAuthentication,
+        authentication.BasicAuthentication,
+        authentication.SessionAuthentication,
+    ]
 
     def get(self, request, format=None):
         data = user_credentials.objects.filter(user=request.user).first()
@@ -714,18 +726,21 @@ class Orders(APIView):
         url = f"https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter={created_after}"
         sandbox_url = f"https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter=TEST_CASE_200"
         payload = {}
-
+        # set_session_token(request, data)
+        # print(request.session.get("access_token"))
         if not data.valid_token():
-            get_token(request.user, grant_type="refresh_token")
+            get_token(request=request, user=request.user, grant_type="refresh_token")
 
         headers = {
             "x-amz-access-token": data.access_token,
         }
-
         response = requests.get(sandbox_url, headers=headers, data=payload)
         # return Response(response.json())
 
         # orders = get_orders()
 
         # return Response(orders.json(), status=200)
+        if response.status_code == 403:
+            return Response("You need to authorize again", status=403)
+        print(response.status_code)
         return Response(response.json(), status=200)
