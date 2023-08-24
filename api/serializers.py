@@ -39,11 +39,11 @@ class Company_Serializer(serializers.ModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-        contacts = validated_data.pop("contacts")
+        contacts = validated_data.pop("contacts", None)
         x = super().create(validated_data)
-        print(type(x))
 
-        Contacts.objects.create(company=x, **contacts)
+        if contacts:
+            Contacts.objects.create(company=x, **contacts)
         return x
 
 

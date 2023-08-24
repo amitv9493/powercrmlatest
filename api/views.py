@@ -712,6 +712,9 @@ def set_session_token(request, user_data):
     request.session["access_token"] = user_data.access_token
 
 
+from amazon.auth.base import Token
+
+
 class Orders(APIView):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [
@@ -736,8 +739,11 @@ class Orders(APIView):
             return response
 
         response = get_orders()
-        if response.status_code >= 400:
+        if response.status_code >= 100:
             get_token(request=request, user=request.user, grant_type="refresh_token")
+            token = Token(user_data=data, grant_type="refresh_token").get_access_token
+            print(token)
+
             response = get_orders()
 
         print(response)
