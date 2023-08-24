@@ -31,7 +31,7 @@ from contacts.serializers import ContactSerializer
 
 
 class Company_Serializer(serializers.ModelSerializer):
-    contacts = ContactSerializer()
+    contacts = ContactSerializer(required=False)
 
     class Meta:
         model = Company
