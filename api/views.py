@@ -26,6 +26,11 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginator import CustomPagination
 from rest_framework.permissions import IsAuthenticated
 
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Create your views here.
 
@@ -634,6 +639,8 @@ from document.models import user_credentials
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from amazon.auth import base
+
 
 class authenticate_amazon(APIView):
     permission_classes = [
@@ -642,9 +649,9 @@ class authenticate_amazon(APIView):
     authentication_classes = [authentication.BasicAuthentication]
 
     def get(self, request):
-        url = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id=amzn1.sp.solution.347ce24e-205f-4419-bdcb-38d42b09c7a4&state={request.user.id}&version=beta"
+        url_base = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id={os.getenv('LWA_APP_ID')}&state={request.user.id}&version=beta"
 
-        return redirect(url)
+        return redirect(url_base)
 
 
 class save_credentials(APIView):
@@ -670,13 +677,6 @@ class save_credentials(APIView):
         get_token(user=user, grant_type="authorization_code", request=None)
 
         return Response({"msg": "success"}, status=200)
-
-
-import requests
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def get_token(user, grant_type, request=None):
@@ -725,22 +725,21 @@ class Orders(APIView):
         created_after = request.query_params.get("created_after", None)
         url = f"https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter={created_after}"
         sandbox_url = f"https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter=TEST_CASE_200"
-        payload = {}
-        # set_session_token(request, data)
-        # print(request.session.get("access_token"))
-        if not data.valid_token():
+
+        def get_orders():
+            payload = {}
+
+            headers = {
+                "x-amz-access-token": data.access_token,
+            }
+            response = requests.get(sandbox_url, headers=headers, data=payload)
+            return response
+
+        response = get_orders()
+        if response.status_code >= 400:
             get_token(request=request, user=request.user, grant_type="refresh_token")
+            response = get_orders()
 
-        headers = {
-            "x-amz-access-token": data.access_token,
-        }
-        response = requests.get(sandbox_url, headers=headers, data=payload)
-        # return Response(response.json())
-
-        # orders = get_orders()
-
-        # return Response(orders.json(), status=200)
-        if response.status_code == 403:
-            return Response("You need to authorize again", status=403)
+        print(response)
         print(response.status_code)
         return Response(response.json(), status=200)
