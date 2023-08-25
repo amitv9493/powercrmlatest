@@ -87,7 +87,7 @@ class Site_view(generics.ListAPIView):
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
     ordering_fields = ["date_created"]
-    ordering = ["-date_created"]
+    ordering = ["company_id"]
     filterset_fields = ["group_name", "company", "support_contact", "loa_template"]
     search_fields = [
         "parent_company",
@@ -102,7 +102,10 @@ class Site_view(generics.ListAPIView):
         "lead_source",
         "agent_email",
     ]
-
+    
+    # def get_queryset(self):
+        
+    #     return super().get_queryset().order_by('-company_id')
 
 class Site_Create_view(generics.CreateAPIView):
     queryset = Site.objects.all()
