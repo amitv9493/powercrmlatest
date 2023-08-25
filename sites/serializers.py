@@ -106,16 +106,13 @@ class Site_Create_Serializer(serializers.ModelSerializer):
             "current_gas_and_electricity_supplier_details": {"required": False},
         }
 
-    def validate(self, attrs):
-        data  = super().validate(attrs)
-        
-        group_id = data.get('group_site',None)
-        if group_id:
-            try:
-                MultiSite.objects.get(id=group_id)
-            except:
-                raise serializers.ValidationError({"error":["Group does not exists"]})
-        return data
+    def validate_group_site(self, value):
+
+        try:
+            MultiSite.objects.get(id=value)
+        except:
+            raise serializers.ValidationError({"error":["Group does not exists"]})
+        return value
     
     def create(self, validated_data):
         
