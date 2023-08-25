@@ -81,7 +81,7 @@ class BillingAddressViewset(ModelViewSet):
 ########################################################"""
 
 
-class Site_view(generics.ListCreateAPIView):
+class Site_view(generics.ListAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Serializer
     pagination_class = CustomPagination

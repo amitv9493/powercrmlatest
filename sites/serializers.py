@@ -2,6 +2,7 @@ from rest_framework import serializers
 from company.models import *
 from django.contrib.auth.models import User
 from .models import *
+from multisite.models import MultiSite
 from contacts.serializers import ContactSerializer
 
 """#######################################################
@@ -95,7 +96,7 @@ class Site_Create_Serializer(serializers.ModelSerializer):
     billing_address = BillingAddressSerializer(required=False)
     site_address = SiteAddressSerializer(required=False)
     contacts = ContactSerializer(required=False)
-
+    group_site = serializers.IntegerField(write_only=True, required=False)
     class Meta:
         model = Site
         fields = "__all__"
@@ -108,18 +109,20 @@ class Site_Create_Serializer(serializers.ModelSerializer):
         #set the contact field to its string represntation
     # Make type_of_owner fields required=False
 
-    # def create(self, validated_data):
-    #     billing_address = validated_data.pop("billing_address")
-    #     site_address = validated_data.pop("site_address")
-    #     print(billing_address)
-    #     print(site_address)
-
-    #     site = Site.objects.create(**validated_data)
-    #     SiteAddress.objects.create(site=site, **site_address)
-    #     BillingAddress.objects.create(site=site, **billing_address)
-
-    #     return site
-
+    def create(self, validated_data):
+        
+        group_id = validated_data.pop("group_site", None)
+        if group_id:
+            try:
+                group_obj = MultiSite.objects.get(id=group_id)
+            except MultiSite.DoesNotExist:
+                raise serializers.ValidationError({"error": "Invalid group_site"})
+            
+        site = super().create(validated_data)
+        group_obj.sites.add(site)
+                    
+        return site
+    
     def update(self, instance, validated_data):
         billing_address_data = validated_data.pop("billing_address", {})
 
