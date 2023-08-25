@@ -106,20 +106,23 @@ class Site_Create_Serializer(serializers.ModelSerializer):
             "current_gas_and_electricity_supplier_details": {"required": False},
         }
 
-        #set the contact field to its string represntation
-    # Make type_of_owner fields required=False
-
+    def validate_group_site(self, value):
+        try:
+            MultiSite.objects.get(id=value)
+        except:
+            return serializers.ValidationError({"error":"Group does not exists"})
+        return value
+    
     def create(self, validated_data):
         
         group_id = validated_data.pop("group_site", None)
         if group_id:
-            try:
-                group_obj = MultiSite.objects.get(id=group_id)
-            except MultiSite.DoesNotExist:
-                raise serializers.ValidationError({"error": "Invalid group_site"})
+            group_obj = MultiSite.objects.get(id=group_id)                
             
         site = super().create(validated_data)
-        group_obj.sites.add(site)
+        
+        if group_id:
+            group_obj.sites.add(site)
                     
         return site
     
