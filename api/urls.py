@@ -75,4 +75,5 @@ urlpatterns = [
     path("orders/", Orders.as_view(), name="allorders"),
     path("auth/", authenticate_amazon.as_view(), name="authenticate_amazon"),
     path("auth/callback/", save_credentials.as_view(), name="save_credentials"),
+    path("hello/", hello.as_view(), name="hello_world"),
 ] + router.urls

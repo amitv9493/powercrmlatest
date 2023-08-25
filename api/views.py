@@ -10,7 +10,7 @@ from .serializers import (
     UserProfileSerializer,
 )
 from rest_framework import status
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 from .serializers import *
@@ -31,7 +31,9 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+from amazon.auth.base import Token
 
+token = Token()
 # Create your views here.
 
 
@@ -80,7 +82,8 @@ class LoginView(APIView):
                     {"token": token, "msg": "login Successful"},
                     status=status.HTTP_200_OK,
                 )
-
+                login(request, user)
+                token.user_data = user
             return Response(
                 {"errors": {"Non_field_errors": ["username or password is not valid"]}},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -632,6 +635,13 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = New_electricity_progress.objects.all()
 
 
+"""===================================================================================
+
+                    SP API AUTHENTICATION
+
+======================================================================================
+"""
+
 import requests
 from django.shortcuts import redirect
 from document.models import user_credentials
@@ -639,7 +649,9 @@ from document.models import user_credentials
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from amazon.auth import base
+from amazon.auth.base import Token
+
+token = Token()
 
 
 class authenticate_amazon(APIView):
@@ -712,7 +724,6 @@ def set_session_token(request, user_data):
     request.session["access_token"] = user_data.access_token
 
 
-from amazon.auth.base import Token
 
 
 class Orders(APIView):
@@ -725,6 +736,8 @@ class Orders(APIView):
 
     def get(self, request, format=None):
         data = user_credentials.objects.filter(user=request.user).first()
+        token.user_data = data
+        print(token.access_token)
         created_after = request.query_params.get("created_after", None)
         url = f"https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter={created_after}"
         sandbox_url = f"https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter=TEST_CASE_200"
@@ -733,19 +746,38 @@ class Orders(APIView):
             payload = {}
 
             headers = {
-                "x-amz-access-token": data.access_token,
+                "x-amz-access-token": token.access_token,
             }
             response = requests.get(sandbox_url, headers=headers, data=payload)
             return response
 
         response = get_orders()
-        if response.status_code >= 100:
-            get_token(request=request, user=request.user, grant_type="refresh_token")
-            token = Token(user_data=data, grant_type="refresh_token").get_access_token
-            print(token)
+        if 400 <= response.status_code <= 499:
+            # get_token(request=request, user=request.user, grant_type="refresh_token")
+            token.GenerateAccessToken(grant_type="refresh_token")
+            print(token.access_token)
 
             response = get_orders()
 
         print(response)
         print(response.status_code)
         return Response(response.json(), status=200)
+
+
+class hello(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = [authentication.a]
+    
+    def post(self, request):
+        
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            username = serializer.data.get("username")
+            password = serializer.data.get("password")
+            
+            user = authenticate(username=username, password=password)
+            
+            if user:
+                login(request, user)
+                
+            return Response({"msg":"logged In successfully"},status=200)

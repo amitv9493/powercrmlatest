@@ -1,9 +1,7 @@
-from django.shortcuts import redirect
 import os
 from rest_framework.response import Response
 
 import requests
-
 
 class Token:
     url = "https://api.amazon.com/auth/o2/token"
@@ -11,16 +9,17 @@ class Token:
 
     def __init__(
         self,
-        user_data: object,
-        grant_type: str,
     ) -> None:
-        self._user_data = user_data
+        self._user_data = None
         self._access_token = None
         self._refresh_token = None
+        
+        
+    def initial_data(self):
+        self._access_token = self._user_data.access_token
+        self._refresh_token = self._user_data.refresh_token  
 
-        self.save_token(grant_type=grant_type)
-
-    def save_token(self, grant_type: str) -> None:
+    def GenerateAccessToken(self, grant_type: str) -> None:
         if grant_type == "authorization_code":
             token = self._user_data.code
             type = "code"
@@ -37,19 +36,26 @@ class Token:
         if token_data.get("error"):
             return Response(token_data, status=400)
 
-        self._user_data.access_token = self._access_token = token_data.get(
+        self._access_token = token_data.get(
             "access_token"
         )
-        self._user_data.refresh_token = self._refresh_token = token_data.get(
+        self._refresh_token = token_data.get(
             "refresh_token"
         )
 
-        self._user_data.save()
-
     @property
-    def get_access_token(self) -> str:
+    def access_token(self) -> str:
         return self._access_token
 
     @property
-    def get_refresh_token(self) -> str:
+    def refresh_token(self) -> str:
         return self._refresh_token
+    
+    @property
+    def user_data(self):
+        return self._user_data
+    
+    @user_data.setter
+    def user_data(self,user_data):
+        self._user_data = user_data
+        

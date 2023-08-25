@@ -105,6 +105,7 @@ class Site_Create_Serializer(serializers.ModelSerializer):
             "current_gas_and_electricity_supplier_details": {"required": False},
         }
 
+        #set the contact field to its string represntation
     # Make type_of_owner fields required=False
 
     # def create(self, validated_data):
