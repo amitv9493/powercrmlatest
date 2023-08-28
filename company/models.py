@@ -71,7 +71,7 @@ class Company(models.Model):
 
     reference = models.CharField(max_length=128, blank=True, null=True)
 
-    parent_company = models.CharField( null=True, blank=True, help_text="Optional")
+    parent_company = models.CharField( null=True, blank=True, help_text="Optional", max_length=128)
 
     def __str__(self):
         return self.name
