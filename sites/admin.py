@@ -33,7 +33,6 @@ class SiteAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "group_name",
-        "parent_company",
         "site_name",
         "company",
         "type_of_owner",
@@ -64,7 +63,6 @@ class SiteAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "group_name",
-                    "parent_company",
                     "site_name",
                     "company",
                     "type_of_owner",

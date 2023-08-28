@@ -32,15 +32,7 @@ class Site(models.Model):
     group_name = models.ForeignKey(
         group, on_delete=models.SET_NULL, null=True, blank=True
     )
-
-    parent_company = models.ForeignKey(
-        "company.Company",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name=_("Parent Company (Optional)"),
-        related_name='+',
-    )
+    
     site_name = models.CharField(max_length=128)
     company = models.ForeignKey(
         "company.Company", on_delete=models.CASCADE, verbose_name="Company Name"

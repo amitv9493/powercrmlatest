@@ -82,7 +82,13 @@ class BillingAddressViewset(ModelViewSet):
 
 
 class Site_view(generics.ListAPIView):
-    queryset = Site.objects.all()
+    queryset = Site.objects.select_related(
+        "contacts",
+        "site_address",
+        "billing_address",
+        "contacts",
+        "company",
+        )
     serializer_class = Site_Serializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
