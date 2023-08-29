@@ -14,6 +14,7 @@ AUTH_USER_MODEL = "users.User"
 
 ALLOWED_HOSTS = ["*"]
 
+APPEND_SLASH = True
 
 REAL_BASE_DIR = Path(__file__).resolve().parent.parent.parent
 

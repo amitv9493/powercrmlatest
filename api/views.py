@@ -332,23 +332,6 @@ class SiteReminderIDView(generics.RetrieveUpdateDestroyAPIView):
         return super().retrieve(request, pk)
 
 
-"""
-===========================================================================
-
-                        GENERATE QUOTE VIEWS
-
-===========================================================================
-"""
-
-
-class GenerateQuoteListView(generics.ListCreateAPIView):
-    serializer_class = GenerateQuoteSerializer
-    queryset = Generate_Quote.objects.all()
-
-
-class GenerateQuoteIDView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = GenerateQuoteSerializer
-    queryset = Generate_Quote.objects.all()
 
 
 from rest_framework.decorators import api_view
@@ -398,87 +381,6 @@ def SupplyView(request, site_id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-"""==========================================================================================
-
-                                        QUOTE VIEW
-                                        
-=========================================================================================="""
-
-# QUOTE SETTINGS
-from quoting.models import Generate_Group_Quote, Quoting_Settings, Generate_Quote
-
-
-@api_view(["GET"])
-def QuoteSettingView(request):
-    if request.method == "GET":
-        queryset = Quoting_Settings.objects.all()
-        serializer = QuoteSettingSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-@api_view(["PUT"])
-def QuoteSettingInstanceView(request, pk):
-    try:
-        instance = Quoting_Settings.objects.get(id=pk)
-    except Quoting_Settings.DoesNotExist:
-        return Response(
-            status=status.HTTP_204_NO_CONTENT,
-            data={"msg": "No settting with this ID please provide `pk=1`"},
-        )
-
-    if request.method == "PUT":
-        serializer = QuoteSettingSerializer(instance, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"msg": "Not a valid data"}
-            )
-
-
-# GENERAL QUOTES
-
-
-class GeneralQuoteView(generics.ListCreateAPIView):
-    serializer_class = GenerateQuoteSerializer
-    queryset = Generate_Quote.objects.all()
-
-
-class GeneralQuoteIDView(APIView):
-    def get_object(self, pk):
-        try:
-            return Generate_Quote.objects.get(id=pk)
-        except Generate_Quote.DoesNotExist:
-            return Response(
-                status=status.HTTP_204_NO_CONTENT,
-                data={"msg": "No content with this ID"},
-            )
-
-    def patch(self, request, pk):
-        instance = self.get_object(pk=pk)
-        if request.method == "PATCH":
-            serializer = GenerateQuoteSerializer(instance, request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def get(self, request, pk):
-        instance = self.get_object(pk=pk)
-        if request.method == "GET":
-            serializer = GenerateQuoteSerializer(instance)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-# GROUP QUOTE
-
-
-class GroupQuoteView(generics.ListCreateAPIView):
-    serializer_class = GroupQuoteSerializer
-    queryset = Generate_Group_Quote.objects.all()
 
 
 class GeneralDocumentView(ModelViewSet):

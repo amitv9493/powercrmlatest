@@ -21,7 +21,7 @@ class Generate_Quote(models.Model):
     #     perday='perday',('perday')
     #     permonth='permonth',('permonth')
     kva_charge = models.FloatField(
-        verbose_name="Standing Charge(pence)", max_length=128
+        verbose_name="KVA Charge(pence)", max_length=128
     )
     additional_charge = models.FloatField(verbose_name="Additional Charge(£)")
     extra_info = models.CharField(max_length=128, default="")
@@ -37,6 +37,7 @@ class Generate_Quote(models.Model):
 
 
 class Generate_Group_Quote(models.Model):
+    group_name = models.CharField(blank=True, null=True,max_length=50)
     group_detail = models.ManyToManyField("Generate_Quote")
 
     class Meta:

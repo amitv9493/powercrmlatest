@@ -15,6 +15,7 @@ urlpatterns = [
     # """ROUTERS"""
     path("sites/", include("sites.urls")),
     path("multisite/", include("multisite.urls")),
+    path("quote/", include("quoting.urls")),
     # path("company/", include("company.urls")),
     # ======================================================
     path("registration/", RegistrationView.as_view(), name="registration"),
@@ -48,14 +49,7 @@ urlpatterns = [
     path("sitereminder/<int:pk>/", SiteReminderIDView.as_view()),
     # COLLECTION OF ALL SUPPLIES
     path("supplyview/<int:site_id>/", SupplyView),
-    # QUOTING
-    path("generalquote/", GenerateQuoteListView.as_view()),
-    path("generalquote/<int:pk>/", GenerateQuoteIDView.as_view()),
-    path("quote-settings/", QuoteSettingView),
-    path("quote-settings/<int:pk>/", QuoteSettingInstanceView),
-    path("general-quote/", GeneralQuoteView.as_view()),
-    path("general-quote/<int:pk>/", GeneralQuoteIDView.as_view(), name="general-quote"),
-    path("group-quote/", GroupQuoteView.as_view()),
+    
     path("loa-templates/", LOATemplateView.as_view()),
     path("loa-templates/<int:pk>/", LOATemplateIDView.as_view()),
     # PROGRESS VIEW

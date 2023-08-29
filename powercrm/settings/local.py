@@ -32,5 +32,6 @@ SESSION_COOKIE_HTTPONLY = True
 
 # MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
 
-
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 SILKY_PYTHON_PROFILER =True
