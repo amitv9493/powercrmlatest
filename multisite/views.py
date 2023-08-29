@@ -10,7 +10,7 @@ from sites.models import Site
 
 class MultiSiteViewSet(ModelViewSet):
     queryset = MultiSite.objects.prefetch_related(
-        Prefetch(lookup="sites",queryset=Site.objects.only("id", "company", "parent_company").select_related("company")))
+        Prefetch(lookup="sites",queryset=Site.objects.only("id", "company").select_related("company")))
     serializer_class = MultiSiteSerializer
     pagination_class = CustomPagination
     
