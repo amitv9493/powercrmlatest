@@ -3,12 +3,15 @@ from .models import Generate_Quote, Generate_Group_Quote, Quoting_Settings
 # from sites.serializers import Site_Create_Serializer
 from multisite.serializers import Site_Serializer
 class GenerateQuoteSerializer(serializers.ModelSerializer):
-    site = Site_Serializer()
     class Meta:
         model = Generate_Quote
         fields = "__all__"
         # depth =1
     
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["site"] = Site_Serializer(instance.site).data
+        return data 
         
 class QuoteSettingSerializer(serializers.ModelSerializer):
     class Meta:
