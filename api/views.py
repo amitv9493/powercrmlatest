@@ -71,18 +71,15 @@ class LoginView(APIView):
     def post(self, request, format=None):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            # email = serializer.data.get('email')
             username = serializer.data.get("username")
             password = serializer.data.get("password")
             user = authenticate(username=username, password=password)
-
             if user is not None:
                 token = get_tokens_for_user(user)
                 return Response(
                     {"token": token, "msg": "login Successful"},
                     status=status.HTTP_200_OK,
                 )
-                login(request, user)
                 token.user_data = user
             return Response(
                 {"errors": {"Non_field_errors": ["username or password is not valid"]}},
@@ -758,7 +755,8 @@ class Orders(APIView):
             print(token.access_token)
 
             response = get_orders()
-
+        elif response.status_code >=500:
+            return Response({"error": "Internal Server occured"}, status=500)
         print(response)
         print(response.status_code)
         return Response(response.json(), status=200)
