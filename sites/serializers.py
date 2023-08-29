@@ -91,7 +91,11 @@ class Site_Serializer(serializers.ModelSerializer):
         fields = "__all__"
         depth = 1
 
-
+class SiteCompanySerializer(serializers.ModelSerializer):
+    company = Company_Name_Serializers()
+    class Meta:
+        model = Site
+        fields = ("id","site_name", "company")
 class Site_Create_Serializer(serializers.ModelSerializer):
     billing_address = BillingAddressSerializer(required=False)
     site_address = SiteAddressSerializer(required=False)

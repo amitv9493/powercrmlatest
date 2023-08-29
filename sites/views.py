@@ -109,10 +109,21 @@ class Site_view(generics.ListAPIView):
         "agent_email",
     ]
     
-    # def get_queryset(self):
+    def get_serializer_class(self):
+        if self.request.query_params.get("brief", None):
+            return SiteCompanySerializer
+        return super().get_serializer_class()
+    
+    
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
         
-    #     return super().get_queryset().order_by('-company_id')
-
+        if request.query_params.get("brief", None):
+            serializer = self.get_serializer(qs, many=True)
+            return Response(serializer.data)
+        
+        return super().list(request, *args, **kwargs)
+        
 class Site_Create_view(generics.CreateAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Create_Serializer

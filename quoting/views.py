@@ -17,15 +17,6 @@ class GenerateQuoteIDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GenerateQuoteSerializer
     queryset = Generate_Quote.objects.all()
 
-
-
-
-"""==========================================================================================
-
-                                        QUOTE VIEW
-                                        
-=========================================================================================="""
-
 # QUOTE SETTINGS
 @api_view(["GET"])
 def QuoteSettingView(request):
