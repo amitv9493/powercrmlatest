@@ -1,12 +1,15 @@
 from rest_framework import serializers
 from .models import Generate_Quote, Generate_Group_Quote, Quoting_Settings
-
+# from sites.serializers import Site_Create_Serializer
+from multisite.serializers import Site_Serializer
 class GenerateQuoteSerializer(serializers.ModelSerializer):
+    site = Site_Serializer()
     class Meta:
         model = Generate_Quote
         fields = "__all__"
-
-
+        # depth =1
+    
+        
 class QuoteSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quoting_Settings
