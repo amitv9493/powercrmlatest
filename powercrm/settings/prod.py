@@ -1,6 +1,7 @@
 from .base import *
 from decouple import config
 
+from datetime import timedelta
 DEBUG = False
 DATABASES = {
     "default": {
@@ -38,4 +39,10 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.MultiPartParser",
     ],
     "DEFAULT_PAGINATION_CLASS": "api.paginator.CustomPagination",
+}
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
