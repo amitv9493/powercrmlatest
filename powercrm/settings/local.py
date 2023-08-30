@@ -1,21 +1,15 @@
 from .base import *
-from decouple import config
 
 DEBUG = True
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("NAME"),
-        "USER": config("USER"),
-        "PASSWORD": config("PASSWORD"),
-        "HOST": "localhost",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
 INSTALLED_APPS += [
     "django_extensions",
-    "knox",
     # "silk",
     # "debug_toolbar",
 ]
