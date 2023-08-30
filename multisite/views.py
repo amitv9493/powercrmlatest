@@ -12,7 +12,7 @@ class MultiSiteViewSet(ModelViewSet):
     queryset = MultiSite.objects.prefetch_related(
         Prefetch(lookup="sites",queryset=Site.objects.only("id", "company").select_related("company")))
     serializer_class = MultiSiteSerializer
-    pagination_class = CustomPagination
+    pagination_class = None
     
     # @silk_profile(name='MultiSiteViewSet list')
     def list(self, request, *args, **kwargs):
