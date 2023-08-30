@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import empty
 from .models import MultiSite
 from sites.serializers import Site_Create_Serializer
 from sites.models import Site
@@ -22,3 +23,10 @@ class MultiSiteSerializer(serializers.ModelSerializer):
         serializer = Site_Serializer
         response['sites'] = serializer(instance.sites.all(), many=True).data
         return response
+    
+
+class MultiSiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  MultiSite
+        fields = ["id", "group_name", "group_type"]
+        
