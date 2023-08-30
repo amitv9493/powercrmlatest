@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register(prefix="get/groups", viewset=Group_Name_View, basename="group")
+router.register(prefix="groups", viewset=Group_Name_View, basename="group")
 router.register("get/siteaddress", SiteAddressViewset, basename="site-address")
 router.register("get/billingaddress", BillingAddressViewset, basename="billing-address")
 
