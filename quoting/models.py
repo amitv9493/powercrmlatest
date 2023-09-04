@@ -23,8 +23,8 @@ class Generate_Quote(models.Model):
     kva_charge = models.FloatField(
         verbose_name="KVA Charge(pence)", max_length=128
     )
-    additional_charge = models.FloatField(verbose_name="Additional Charge(£)")
-    extra_info = models.CharField(max_length=128, default="")
+    additional_charge = models.FloatField(verbose_name="Additional Charge(£)", null=True, blank=True)
+    extra_info = models.CharField(max_length=128, default="",null=True, blank=True)
     up_lift = models.FloatField(verbose_name="Up Lift")
     rates_already_include_at_uplift = models.BooleanField(default=False)
 
