@@ -2,7 +2,7 @@ from .base import *
 from decouple import config
 
 from datetime import timedelta
-DEBUG = False
+DEBUG = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
