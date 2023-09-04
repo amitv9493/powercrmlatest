@@ -541,143 +541,143 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
 ======================================================================================
 """
 
-import requests
-from django.shortcuts import redirect
-from document.models import user_credentials
+# import requests
+# from django.shortcuts import redirect
+# from document.models import user_credentials
 
 
-from rest_framework_simplejwt.authentication import JWTAuthentication
+# from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from amazon.auth.base import Token
+# from amazon.auth.base import Token
 
-token = Token()
-
-
-class authenticate_amazon(APIView):
-    permission_classes = [
-        IsAuthenticated,
-    ]
-    authentication_classes = [authentication.BasicAuthentication]
-
-    def get(self, request):
-        url_base = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id={os.getenv('LWA_APP_ID')}&state={request.user.id}&version=beta"
-
-        return redirect(url_base)
+# token = Token()
 
 
-class save_credentials(APIView):
-    permission_classes = []
-    authentication_classes = []
+# class authenticate_amazon(APIView):
+#     permission_classes = [
+#         IsAuthenticated,
+#     ]
+#     authentication_classes = [authentication.BasicAuthentication]
 
-    def get(self, request):
-        complete_uri = request.build_absolute_uri()
-        print(complete_uri)
+#     def get(self, request):
+#         url_base = f"https://sellercentral.amazon.in/apps/authorize/consent?application_id={os.getenv('LWA_APP_ID')}&state={request.user.id}&version=beta"
 
-        data = request.query_params
-        code = data.get("spapi_oauth_code")
-        selling_partner_id = data.get("selling_partner_id")
-        state = int(data.get("state"))
-
-        user = get_user_model().objects.get(id=state)
-
-        cred, _ = user_credentials.objects.get_or_create(user=user)
-        cred.code = code
-        cred.selling_partner_id = selling_partner_id
-        cred.save()
-
-        get_token(user=user, grant_type="authorization_code", request=None)
-
-        return Response({"msg": "success"}, status=200)
+#         return redirect(url_base)
 
 
-def get_token(user, grant_type, request=None):
-    url = "https://api.amazon.com/auth/o2/token"
+# class save_credentials(APIView):
+#     permission_classes = []
+#     authentication_classes = []
 
-    user_data = user_credentials.objects.get(user=user)
+#     def get(self, request):
+#         complete_uri = request.build_absolute_uri()
+#         print(complete_uri)
 
-    if grant_type == "authorization_code":
-        token = user_data.code
-        type = "code"
-    elif grant_type == "refresh_token":
-        token = user_data.refresh_token
-        type = "refresh_token"
+#         data = request.query_params
+#         code = data.get("spapi_oauth_code")
+#         selling_partner_id = data.get("selling_partner_id")
+#         state = int(data.get("state"))
 
-    payload = f"grant_type={grant_type}&{type}={token}&client_id={os.getenv('client_id')}&client_secret={os.getenv('client_secret')}"
-    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+#         user = get_user_model().objects.get(id=state)
 
-    response = requests.post(url, headers=headers, data=payload)
+#         cred, _ = user_credentials.objects.get_or_create(user=user)
+#         cred.code = code
+#         cred.selling_partner_id = selling_partner_id
+#         cred.save()
 
-    token_data = response.json()
-    print(token_data)
+#         get_token(user=user, grant_type="authorization_code", request=None)
 
-    if token_data.get("error"):
-        return Response(token_data, status=400)
-
-    user_data.access_token = token_data.get("access_token")
-    user_data.refresh_token = token_data.get("refresh_token")
-
-    user_data.save()
+#         return Response({"msg": "success"}, status=200)
 
 
-def set_session_token(request, user_data):
-    request.session["access_token"] = user_data.access_token
+# def get_token(user, grant_type, request=None):
+#     url = "https://api.amazon.com/auth/o2/token"
+
+#     user_data = user_credentials.objects.get(user=user)
+
+#     if grant_type == "authorization_code":
+#         token = user_data.code
+#         type = "code"
+#     elif grant_type == "refresh_token":
+#         token = user_data.refresh_token
+#         type = "refresh_token"
+
+#     payload = f"grant_type={grant_type}&{type}={token}&client_id={os.getenv('client_id')}&client_secret={os.getenv('client_secret')}"
+#     headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+#     response = requests.post(url, headers=headers, data=payload)
+
+#     token_data = response.json()
+#     print(token_data)
+
+#     if token_data.get("error"):
+#         return Response(token_data, status=400)
+
+#     user_data.access_token = token_data.get("access_token")
+#     user_data.refresh_token = token_data.get("refresh_token")
+
+#     user_data.save()
+
+
+# def set_session_token(request, user_data):
+#     request.session["access_token"] = user_data.access_token
 
 
 
 
-class Orders(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [
-        # JWTAuthentication,
-        authentication.BasicAuthentication,
-        authentication.SessionAuthentication,
-    ]
+# class Orders(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     authentication_classes = [
+#         # JWTAuthentication,
+#         authentication.BasicAuthentication,
+#         authentication.SessionAuthentication,
+#     ]
 
-    def get(self, request, format=None):
-        data = user_credentials.objects.filter(user=request.user).first()
-        token.user_data = data
-        print(token.access_token)
-        created_after = request.query_params.get("created_after", None)
-        url = f"https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter={created_after}"
-        sandbox_url = f"https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter=TEST_CASE_200"
+#     def get(self, request, format=None):
+#         data = user_credentials.objects.filter(user=request.user).first()
+#         token.user_data = data
+#         print(token.access_token)
+#         created_after = request.query_params.get("created_after", None)
+#         url = f"https://sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter={created_after}"
+#         sandbox_url = f"https://sandbox.sellingpartnerapi-eu.amazon.com/orders/v0/orders?MarketplaceIds={data.market_place_id}&CreatedAfter=TEST_CASE_200"
 
-        def get_orders():
-            payload = {}
+#         def get_orders():
+#             payload = {}
 
-            headers = {
-                "x-amz-access-token": token.access_token,
-            }
-            response = requests.get(sandbox_url, headers=headers, data=payload)
-            return response
+#             headers = {
+#                 "x-amz-access-token": token.access_token,
+#             }
+#             response = requests.get(sandbox_url, headers=headers, data=payload)
+#             return response
 
-        response = get_orders()
-        if 400 <= response.status_code <= 499:
-            # get_token(request=request, user=request.user, grant_type="refresh_token")
-            token.GenerateAccessToken(grant_type="refresh_token")
-            print(token.access_token)
+#         response = get_orders()
+#         if 400 <= response.status_code <= 499:
+#             # get_token(request=request, user=request.user, grant_type="refresh_token")
+#             token.GenerateAccessToken(grant_type="refresh_token")
+#             print(token.access_token)
 
-            response = get_orders()
-        elif response.status_code >=500:
-            return Response({"error": "Internal Server occured"}, status=500)
-        print(response)
-        print(response.status_code)
-        return Response(response.json(), status=200)
+#             response = get_orders()
+#         elif response.status_code >=500:
+#             return Response({"error": "Internal Server occured"}, status=500)
+#         print(response)
+#         print(response.status_code)
+#         return Response(response.json(), status=200)
 
 
-class hello(APIView):
-    permission_classes = [permissions.AllowAny]
-    # authentication_classes = [authentication.a]
+# class hello(APIView):
+#     permission_classes = [permissions.AllowAny]
+#     # authentication_classes = [authentication.a]
     
-    def post(self, request):
+#     def post(self, request):
         
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            username = serializer.data.get("username")
-            password = serializer.data.get("password")
+#         serializer = LoginSerializer(data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             username = serializer.data.get("username")
+#             password = serializer.data.get("password")
             
-            user = authenticate(username=username, password=password)
+#             user = authenticate(username=username, password=password)
             
-            if user:
-                login(request, user)
+#             if user:
+#                 login(request, user)
                 
-            return Response({"msg":"logged In successfully"},status=200)
+#             return Response({"msg":"logged In successfully"},status=200)

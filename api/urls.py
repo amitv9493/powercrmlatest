@@ -17,6 +17,7 @@ urlpatterns = [
     path("multisite/", include("multisite.urls")),
     path("quote/", include("quoting.urls")),
     # path("company/", include("company.urls")),
+    # path("company/", include("company.urls")),
     # ======================================================
     path("registration/", RegistrationView.as_view(), name="registration"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
@@ -66,8 +67,8 @@ urlpatterns = [
     path("new-ele/<int:pk>/", NewElectricityProgressIDView.as_view()),
     #
     path("company-types/", BusinessTypeView.as_view()),
-    path("orders/", Orders.as_view(), name="allorders"),
-    path("auth/", authenticate_amazon.as_view(), name="authenticate_amazon"),
-    path("auth/callback/", save_credentials.as_view(), name="save_credentials"),
-    path("hello/", hello.as_view(), name="hello_world"),
+    # path("orders/", Orders.as_view(), name="allorders"),
+    # path("auth/", authenticate_amazon.as_view(), name="authenticate_amazon"),
+    # path("auth/callback/", save_credentials.as_view(), name="save_credentials"),
+    # path("hello/", hello.as_view(), name="hello_world"),
 ] + router.urls
