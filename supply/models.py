@@ -1,7 +1,15 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
+class contract_type(models.TextChoices):
+         ElecAMR='ElecAMR',('ElecAMR')
+         ElecDomestic='ElecDomestic',('ElecDomestic')
+         ElecHH='ElecHH',('ElecHH')
+         ElecHHp272='ElecHHp272',('ElecHHp272')
+         ElecNHH='ElecNHH',('ElecNHH')
+         GasAMR='GasAMR',('GasAMR')
+         GasCommercial='GasCommercial',('GasCommercial')
+         GasDomestic=' GasDomestic',('GasDomestic')
 
 class Meter_detail(models.Model):
       site =  models.ForeignKey("sites.Site", on_delete=models.CASCADE)
@@ -32,20 +40,11 @@ class Meter_detail(models.Model):
             verbose_name = "Meter Detail"  
 
 class Current_supplies(models.Model):
+         
       site =  models.ForeignKey("sites.Site", on_delete=models.CASCADE)
-      
       # Gas_current_supplies
       g_supplier=models.CharField(max_length=128,verbose_name="Supplier",null=True ,blank=True)
       g_product=models.CharField(max_length=128, verbose_name="Product", null=True ,blank=True)
-      class contract_type(models.TextChoices):
-         ElecAMR='ElecAMR',('ElecAMR')
-         ElecDomestic='ElecDomestic',('ElecDomestic')
-         ElecHH='ElecHH',('ElecHH')
-         ElecHHp272='ElecHHp272',('ElecHHp272')
-         ElecNHH='ElecNHH',('ElecNHH')
-         GasAMR='GasAMR',('GasAMR')
-         GasCommercial='GasCommercial',('GasCommercial')
-         GasDomestic=' GasDomestic',('GasDomestic')
       g_contract_type=models.CharField(choices=contract_type.choices,max_length=128,null=True, blank=True, verbose_name='Contract Type')
       g_igt_meter= models.BooleanField(default=False, null=True, blank=True, verbose_name="IGT Meter")
       g_green_deal=models.BooleanField(default=False, null=True,blank=True, verbose_name="Green Deal")
@@ -64,16 +63,6 @@ class Current_supplies(models.Model):
       # Electricity_current_supplies
       e_supplier=models.CharField(max_length=128,null=True, blank=True, verbose_name='Supplier')
       e_product=models.CharField(max_length=128,null=True, blank=True, verbose_name='Product')
-
-      class contract_type(models.TextChoices):
-         ElecAMR='ElecAMR',('ElecAMR')
-         ElecDomestic='ElecDomestic',('ElecDomestic')
-         ElecHH='ElecHH',('ElecHH')
-         ElecHHp272='ElecHHp272',('ElecHHp272')
-         ElecNHH='ElecNHH',('ElecNHH')
-         GasAMR='GasAMR',('GasAMR')
-         GasCommercial='GasCommercial',('GasCommercial')
-         GasDomestic=' GasDomestic',('GasDomestic')
       e_contract_type=models.CharField(choices=contract_type.choices,max_length=128,blank=True, null=True, verbose_name='Contract')
       e_igt_meter= models.BooleanField(default=False, null=True, blank=True, verbose_name='IGT Meter')
       e_green_deal=models.BooleanField(default=False, null=True, blank=True, verbose_name='Green Deal')
@@ -96,6 +85,8 @@ class Current_supplies(models.Model):
         
 
 class New_supplies(models.Model):
+      
+         
       site =  models.ForeignKey("sites.Site", on_delete=models.CASCADE)
       
       # Gas_new_supplies
@@ -103,15 +94,6 @@ class New_supplies(models.Model):
       g_supplier=models.CharField(max_length=128,  null=True, blank=True, verbose_name='Supplier')
       g_product=models.CharField(max_length=128,  null=True, blank=True, verbose_name='Product')
       
-      class contract_type(models.TextChoices):
-         ElecAMR='ElecAMR',('ElecAMR')
-         ElecDomestic='ElecDomestic',('ElecDomestic')
-         ElecHH='ElecHH',('ElecHH')
-         ElecHHp272='ElecHHp272',('ElecHHp272')
-         ElecNHH='ElecNHH',('ElecNHH')
-         GasAMR='GasAMR',('GasAMR')
-         GasCommercial='GasCommercial',('GasCommercial')
-         GasDomestic=' GasDomestic',('GasDomestic')
       g_contract_type=models.CharField(choices=contract_type.choices,max_length=128, null=True, blank=True, verbose_name="Contract Type")
       g_igt_meter= models.BooleanField(default=None,  null=True, blank=True, verbose_name='IGT Meter')
       g_green_deal=models.BooleanField(default=False,null=True, blank=True, verbose_name='Green Deal')
@@ -130,16 +112,6 @@ class New_supplies(models.Model):
       # Electricity_new_supplies
       e_supplier=models.CharField(max_length=128,null=True, blank=True, verbose_name='Supplier')
       e_product=models.CharField(max_length=128,null=True, blank=True, verbose_name='Product')
-      
-      class contract_type(models.TextChoices):
-         ElecAMR='ElecAMR',('ElecAMR')
-         ElecDomestic='ElecDomestic',('ElecDomestic')
-         ElecHH='ElecHH',('ElecHH')
-         ElecHHp272='ElecHHp272',('ElecHHp272')
-         ElecNHH='ElecNHH',('ElecNHH')
-         GasAMR='GasAMR',('GasAMR')
-         GasCommercial='GasCommercial',('GasCommercial')
-         GasDomestic=' GasDomestic',('GasDomestic')
       e_contract_type=models.CharField(choices=contract_type.choices,max_length=128,null=True, blank=True, verbose_name='Contract Type')
       e_igt_meter= models.BooleanField(default=None, null=True, blank=True,verbose_name='IGT Meter')
       e_green_deal=models.BooleanField(default=None, null=True, blank=True, verbose_name='green Deal')

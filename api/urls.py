@@ -16,6 +16,8 @@ urlpatterns = [
     path("sites/", include("sites.urls")),
     path("multisite/", include("multisite.urls")),
     path("quote/", include("quoting.urls")),
+    path("supply/", include("supply.urls")),
+    path("reminder/", include("reminder.urls")),
     # path("company/", include("company.urls")),
     # path("company/", include("company.urls")),
     # ======================================================
@@ -35,21 +37,10 @@ urlpatterns = [
     # Trasfered to site application
     path("users/", AllUsers_view.as_view()),
     # SUPPLY VIEWS
-    path("meter-detail/<int:pk>/", meter_detail_list_view.as_view()),
-    path("current-supply/<int:pk>/", Current_supplies_list_view.as_view()),
-    path("new-supply/<int:pk>/", New_supplies_list_view.as_view()),
     # NOTES
     path("notes/", Notes_ListView.as_view()),
     path("notes/<int:pk>/", Notes_CRUD_View.as_view()),
-    # REMINDERS
-    path("generalreminder/", GeneralReminderListView.as_view()),
-    path("generalreminder/<int:pk>/", GeneralReminderIDView.as_view()),
-    path("companyreminder/", CompanyReminderListView.as_view()),
-    path("companyreminder/<int:pk>/", CompanyReminderIDView.as_view()),
-    path("sitereminder/", SiteReminderListView.as_view()),
-    path("sitereminder/<int:pk>/", SiteReminderIDView.as_view()),
     # COLLECTION OF ALL SUPPLIES
-    path("supplyview/<int:site_id>/", SupplyView),
     
     path("loa-templates/", LOATemplateView.as_view()),
     path("loa-templates/<int:pk>/", LOATemplateIDView.as_view()),

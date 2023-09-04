@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import (
@@ -10,24 +10,19 @@ from .serializers import (
     UserProfileSerializer,
 )
 from rest_framework import status
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 from .serializers import *
 from .renderers import UserRenderes
-from sites.models import Site
 from rest_framework.response import Response
-from supply.models import Meter_detail
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser
 
-from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginator import CustomPagination
 from rest_framework.permissions import IsAuthenticated
 
-import requests
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -161,87 +156,6 @@ class AllUsers_view(generics.ListAPIView):
     serializer_class = UserModel_Serializer
 
 
-class meter_detail_list_view(APIView):
-    def get_object(self, pk):
-        try:
-            instance = Meter_detail.objects.get(site=pk)
-        except Meter_detail.DoesNotExist:
-            return Response(
-                status=status.HTTP_204_NO_CONTENT,
-                data={"msg": "No data with this site"},
-            )
-
-    def get(self, request, pk, format=None):
-        instance = self.get_object(pk)
-        serializer = Meter_Detail_Serialzer(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, pk, format=None):
-        instance = self.get_object(pk)
-        serializer = Meter_Detail_Serialzer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"msg": "data is not valid "}
-            )
-
-
-class Current_supplies_list_view(APIView):
-    def get_object(self, pk):
-        try:
-            instance = Current_supplies.objects.get(site=pk)
-        except Current_supplies.DoesNotExist:
-            return Response(
-                status=status.HTTP_204_NO_CONTENT,
-                data={"msg": "No data with this site"},
-            )
-
-    def get(self, request, pk, format=None):
-        instance = self.get_object(pk)
-        serializer = Current_supplies_Serializer(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, pk, format=None):
-        instance = self.get_object(pk)
-        serializer = Current_supplies_Serializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"msg": "data is not valid "}
-            )
-
-
-class New_supplies_list_view(APIView):
-    def get_object(self, pk):
-        try:
-            instance = New_supplies.objects.get(site=pk)
-        except Meter_detail.DoesNotExist:
-            return Response(
-                status=status.HTTP_204_NO_CONTENT,
-                data={"msg": "No data with this site"},
-            )
-
-    def get(self, request, pk, format=None):
-        instance = self.get_object(pk)
-        serializer = New_supplies_Serializer(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def patch(self, request, pk, format=None):
-        instance = self.get_object(pk)
-        serializer = New_supplies_Serializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"msg": "data is not valid "}
-            )
-
-
 """==================================================================="""
 
 
@@ -263,123 +177,6 @@ class Notes_CRUD_View(generics.RetrieveUpdateDestroyAPIView):
 
 
 # from rest_framework
-class GeneralReminderListView(generics.ListCreateAPIView):
-    queryset = General_Reminder.objects.all()
-    serializer_class = GeneralReminderSerializer
-
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["active"]
-
-
-class GeneralReminderIDView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = General_Reminder.objects.all()
-    serializer_class = GeneralReminderSerializer
-
-    # def get_object(self, pk):
-
-    def retrieve(self, request, pk):
-        try:
-            instance = General_Reminder.objects.get(id=pk)
-
-        except General_Reminder.DoesNotExist:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return super().retrieve(request, pk)
-
-
-class CompanyReminderListView(generics.ListCreateAPIView):
-    queryset = Company_Reminder.objects.all()
-    serializer_class = CompanyReminderSerializer
-
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["active"]
-
-
-class CompanyReminderIDView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Company_Reminder.objects.all()
-
-    def retrieve(self, request, pk):
-        try:
-            instance = Company_Reminder.objects.get(id=pk)
-
-        except Company_Reminder.DoesNotExist:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return super().retrieve(request, pk)
-
-    serializer_class = CompanyReminderSerializer
-
-
-class SiteReminderListView(generics.ListCreateAPIView):
-    queryset = Site_Reminder.objects.all()
-    serializer_class = SiteReminderSerializer
-
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["active"]
-
-
-class SiteReminderIDView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Site_Reminder.objects.all()
-    serializer_class = SiteReminderSerializer
-
-    def retrieve(self, request, pk):
-        try:
-            instance = Site_Reminder.objects.get(id=pk)
-
-        except Site_Reminder.DoesNotExist:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return super().retrieve(request, pk)
-
-
-
-
-from rest_framework.decorators import api_view
-
-# class SupplyView(generics.RetrieveUpdateAPIView):
-#     serializer_class = SupplyDetailSerializer
-#     queryset = Supplies.objects.all()
-
-#     def get_queryset(self):
-#         qs = super().get_queryset()
-#         pk = self.kwargs['pk']
-#         # print(pk)
-
-#         qs1 = qs.filter(
-#             meter__site_id = pk,)
-#             # current_supply__site_id = pk,
-#             # new_supply__site_id = pk)
-#         print(qs1)
-#         return qs1
-
-
-@api_view(["GET", "PATCH", "PUT"])
-def SupplyView(request, site_id):
-    try:
-        instance = Supplies.objects.get(
-            meter__site_id=site_id,
-            current_supply__site_id=site_id,
-            new_supply__site_id=site_id,
-        )
-
-    except Supplies.DoesNotExist:
-        return Response(
-            status=status.HTTP_204_NO_CONTENT, data={"msg": "No data for this site"}
-        )
-
-    if request.method == "GET":
-        serializer = SupplyDetailSerializer(instance)
-        return Response(serializer.data)
-
-    if request.method == "PUT":
-        serializer = SupplyDetailSerializer(instance, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 
@@ -411,7 +208,6 @@ class BusinessTypeView(generics.ListCreateAPIView):
     pagination_class = None
 
 
-from rest_framework.parsers import FileUploadParser
 
 
 class LOATemplateView(generics.ListCreateAPIView):

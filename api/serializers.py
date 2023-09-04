@@ -9,7 +9,6 @@ from contacts.models import Contacts
 from document.models import General_Document
 from sites.models import Loa_Template, Site
 from drf_writable_nested.serializers import WritableNestedModelSerializer
-from supply.models import *
 from notes.models import Note
 from reminder.models import Company_Reminder, Site_Reminder, General_Reminder
 from document.models import Company_Document, Site_Document
@@ -48,62 +47,17 @@ class Company_Serializer(serializers.ModelSerializer):
 
 # ====================================================================
 
-
-class Meter_Detail_Serialzer(serializers.ModelSerializer):
-    class Meta:
-        model = Meter_detail
-        fields = "__all__"
-
-
-class Current_supplies_Serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Current_supplies
-        fields = "__all__"
-
-
-class New_supplies_Serializer(serializers.ModelSerializer):
-    class Meta:
-        model = New_supplies
-        fields = "__all__"
-
-
 class Notes_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Note
         fields = "__all__"
 
 
-class CompanyReminderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Company_Reminder
-        fields = "__all__"
-
-
-class SiteReminderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Site_Reminder
-        fields = "__all__"
-
-
-class GeneralReminderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = General_Reminder
-        fields = "__all__"
-
 
 # ============================================================================================
 
 # ============================================================================================
 
-
-class SupplyDetailSerializer(WritableNestedModelSerializer):
-    meter = Meter_Detail_Serialzer()
-    current_supply = Current_supplies_Serializer()
-    new_supply = New_supplies_Serializer()
-
-    class Meta:
-        model = Supplies
-        fields = "__all__"
 
 
 """
