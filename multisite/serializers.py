@@ -25,8 +25,8 @@ class MultiSiteSerializer(serializers.ModelSerializer):
         return response
     
 
-class MultiSiteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model =  MultiSite
-        fields = ["id", "group_name", "group_type"]
+# class MultiSiteSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model =  MultiSite
+#         fields = ["id", "group_name", "group_type"]
         

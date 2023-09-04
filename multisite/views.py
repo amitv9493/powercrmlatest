@@ -17,12 +17,6 @@ class MultiSiteViewSet(ModelViewSet):
     
     # @silk_profile(name='MultiSiteViewSet list')
     def list(self, request, *args, **kwargs):
-        qs = self.get_queryset()
-        
-        if request.query_params.get("brief", None):
-            serializer = self.get_serializer(qs, many=True)
-            return Response(serializer.data)
-        
         return super().list(request, *args, **kwargs)
         
         
