@@ -19,10 +19,15 @@ class QuoteSettingSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class GroupQuoteSerializer(serializers.ModelSerializer):
+class GroupQuoteGETSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Generate_Group_Quote
         fields = "__all__"
         depth = 1
+class GroupQuotePOSTSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Generate_Group_Quote
+        fields = "__all__"
         

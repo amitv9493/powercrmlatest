@@ -1,11 +1,12 @@
-from django.shortcuts import render
 from rest_framework import generics, status
 from .models import *
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from .serializers import *
 from rest_framework.decorators import api_view
+from rest_framework.decorators import permission_classes
+
 # Create your views here.
+
 
 # GENERAL QUOTES
 class GenerateQuoteView(generics.ListCreateAPIView):
@@ -16,6 +17,7 @@ class GenerateQuoteView(generics.ListCreateAPIView):
 class GenerateQuoteIDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GenerateQuoteSerializer
     queryset = Generate_Quote.objects.all()
+
 
 # QUOTE SETTINGS
 @api_view(["GET"])
@@ -47,16 +49,21 @@ def QuoteSettingInstanceView(request, pk):
                 status=status.HTTP_400_BAD_REQUEST, data={"msg": "Not a valid data"}
             )
 
+
 # GROUP QUOTE
 class GroupQuoteView(generics.ListCreateAPIView):
-    serializer_class = GroupQuoteSerializer
+    serializer_class = GroupQuoteGETSerializer
     queryset = Generate_Group_Quote.objects.all()
 
+    def get_serializer_class(self):
+        if self.request.method in ["POST", "PUT", "PATCH"]:
+            return GroupQuotePOSTSerializer
+        return super().get_serializer_class()
 
-from rest_framework.decorators import permission_classes
+
 @api_view(["GET"])
 @permission_classes([])
 def recent_quotes(request):
     queryset = Generate_Quote.objects.all().order_by("-date_created")[:10]
-    
+
     return Response(GenerateQuoteSerializer(queryset, many=True).data)
