@@ -133,9 +133,10 @@ class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Create_Serializer
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 @api_view(["GET"])
+@permission_classes([])
 def recent_sites(request):
     queryset = Site.objects.all().order_by("-date_created")[:10]
     return Response(Site_Serializer(queryset, many=True).data)

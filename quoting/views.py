@@ -53,8 +53,9 @@ class GroupQuoteView(generics.ListCreateAPIView):
     queryset = Generate_Group_Quote.objects.all()
 
 
-
+from rest_framework.decorators import permission_classes
 @api_view(["GET"])
+@permission_classes([])
 def recent_quotes(request):
     queryset = Generate_Quote.objects.all().order_by("-date_created")[:10]
     
