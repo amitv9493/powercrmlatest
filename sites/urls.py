@@ -21,4 +21,5 @@ urlpatterns = [
         name="Support_Contact_View",
     ),
     path("get/loa_template/", Loa_Template_View.as_view(), name="Loa_Template_View"),
+    path("recent-sites/", recent_sites, name="recent-sites"),
 ] + router.urls
