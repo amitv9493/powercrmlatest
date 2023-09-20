@@ -49,9 +49,9 @@ def QuoteSettingInstanceView(request, pk):
                 status=status.HTTP_400_BAD_REQUEST, data={"msg": "Not a valid data"}
             )
 
-
+from rest_framework.viewsets import ModelViewSet
 # GROUP QUOTE
-class GroupQuoteView(generics.ListCreateAPIView):
+class GroupQuoteView(ModelViewSet):
     serializer_class = GroupQuoteGETSerializer
     queryset = Generate_Group_Quote.objects.all()
 
