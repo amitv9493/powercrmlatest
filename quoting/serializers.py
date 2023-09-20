@@ -24,4 +24,5 @@ class GroupQuoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Generate_Group_Quote
         fields = "__all__"
-
+        depth = 1
+        
