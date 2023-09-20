@@ -27,6 +27,7 @@ class Generate_Quote(models.Model):
     extra_info = models.CharField(max_length=128, default="",null=True, blank=True)
     up_lift = models.FloatField(verbose_name="Up Lift")
     rates_already_include_at_uplift = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.supplier

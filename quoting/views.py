@@ -51,3 +51,11 @@ def QuoteSettingInstanceView(request, pk):
 class GroupQuoteView(generics.ListCreateAPIView):
     serializer_class = GroupQuoteSerializer
     queryset = Generate_Group_Quote.objects.all()
+
+
+
+@api_view(["GET"])
+def recent_quotes(request):
+    queryset = Generate_Quote.objects.all().order_by("-date_created")[:10]
+    
+    return Response(GenerateQuoteSerializer(queryset, many=True).data)

@@ -7,4 +7,5 @@ urlpatterns = [
     path("quote-settings/", QuoteSettingView),
     path("quote-settings/<int:pk>/", QuoteSettingInstanceView, name='quote-settings'),
     path("group-quote/", GroupQuoteView.as_view(), name='group-quote'),
+    path("recent-quotes/", recent_quotes, name='recent-quotes')
 ]
