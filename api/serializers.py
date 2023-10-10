@@ -43,8 +43,19 @@ class Company_Serializer(serializers.ModelSerializer):
         if contacts:
             Contacts.objects.create(company=x, **contacts)
         return x
-
-
+    
+    def update(self, instance, validated_data):
+        contacts = validated_data.pop("contacts", None)
+        x = super().update(instance, validated_data)
+        if contacts:
+            contact_instance, created = Contacts.objects.get_or_create(company=x)
+            
+            for key, value in contacts.items():
+                setattr(contact_instance, key, value)
+            
+            contact_instance.save()
+            # (company=x, **contacts)
+        return x
 # ====================================================================
 
 class Notes_Serializer(serializers.ModelSerializer):
