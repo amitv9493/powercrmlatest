@@ -34,7 +34,7 @@ class Company_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = "__all__"
-        depth = 1
+        # depth = 1
 
     def create(self, validated_data):
         contacts = validated_data.pop("contacts", None)
@@ -56,6 +56,11 @@ class Company_Serializer(serializers.ModelSerializer):
             contact_instance.save()
             # (company=x, **contacts)
         return x
+    
+    def to_representation(self, instance):
+        data =  super().to_representation(instance)
+        data["business_type"] = instance.business_type.name
+        return data
 # ====================================================================
 
 class Notes_Serializer(serializers.ModelSerializer):
