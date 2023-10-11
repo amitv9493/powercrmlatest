@@ -57,10 +57,6 @@ class Company_Serializer(serializers.ModelSerializer):
             # (company=x, **contacts)
         return x
     
-    def to_representation(self, instance):
-        data =  super().to_representation(instance)
-        data["business_type"] = instance.business_type.name if instance.business_type else None
-        return data
 # ====================================================================
 
 class Notes_Serializer(serializers.ModelSerializer):
