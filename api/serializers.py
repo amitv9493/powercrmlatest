@@ -59,7 +59,7 @@ class Company_Serializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         data =  super().to_representation(instance)
-        data["business_type"] = instance.business_type.name
+        data["business_type"] = instance.business_type.name if instance.business_type else None
         return data
 # ====================================================================
 
