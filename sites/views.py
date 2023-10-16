@@ -115,11 +115,12 @@ class Site_view(generics.ListAPIView):
             return SiteCompanySerializer
         return super().get_serializer_class()
 
-
-    def get_queryset(self):
+    
+    @property
+    def paginator(self):
         if self.request.query_params.get("brief", None):
-            self.pagination_class = None
-        return super().get_queryset()
+            return None
+        return super().paginator
     
 class Site_Create_view(generics.CreateAPIView):
     queryset = Site.objects.all()
