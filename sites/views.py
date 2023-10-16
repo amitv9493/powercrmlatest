@@ -80,8 +80,8 @@ class BillingAddressViewset(ModelViewSet):
                   Site Views
 ########################################################"""
 
-
-class Site_view(generics.ListAPIView):
+from api.paginator import MultiplePaginationMixin
+class Site_view(MultiplePaginationMixin, generics.ListAPIView):
     queryset = Site.objects.select_related(
         "contacts",
         "site_address",
@@ -90,7 +90,6 @@ class Site_view(generics.ListAPIView):
         "company",
         )
     serializer_class = Site_Serializer
-    pagination_class = CustomPagination
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
     ordering_fields = ["date_created"]
     ordering = ["company_id"]
@@ -108,21 +107,26 @@ class Site_view(generics.ListAPIView):
         "lead_source",
         "agent_email",
     ]
+
+    def get_pagination_class(self):
+        if self.request.query_params.get("brief"):
+            return None
+        CustomPagination()
     
     def get_serializer_class(self):
         if self.request.query_params.get("brief", None):
             return SiteCompanySerializer
         return super().get_serializer_class()
     
-    
-    def list(self, request, *args, **kwargs):
-        qs = self.get_queryset()
+
+    # def list(self, request, *args, **kwargs):
+    #     qs = self.get_queryset()
         
-        if request.query_params.get("brief", None):
-            serializer = self.get_serializer(qs, many=True)
-            return Response(serializer.data)
+    #     if request.query_params.get("brief", None):
+    #         serializer = self.get_serializer(qs, many=True)
+    #         return Response(serializer.data)
         
-        return super().list(request, *args, **kwargs)
+    #     return super().list(request, *args, **kwargs)
         
 class Site_Create_view(generics.CreateAPIView):
     queryset = Site.objects.all()
