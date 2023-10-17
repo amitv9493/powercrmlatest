@@ -9,5 +9,8 @@ class MultiSite(models.Model):
         mutisite = "MULTI", "Multi Site Group"
 
     group_name = models.CharField(max_length=255, null=True)
-    sites = models.ManyToManyField("sites.Site")
+    sites = models.ManyToManyField("sites.Site", blank=True)
     group_type = models.CharField(choices=group_choice.choices, max_length=50)
+    company = models.ForeignKey(
+        "company.Company", blank=True, on_delete=models.SET_NULL, null=True
+    )
