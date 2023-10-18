@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework.fields import empty
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.validators import UniqueValidator
@@ -16,7 +17,18 @@ from django.contrib.auth import get_user_model
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 User = get_user_model()
-#
+
+
+class DynamicModelSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop("fields", None)
+        print("fields", fields)
+        super().__init__(*args, **kwargs)
+        if fields is not None:
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
 
 
 class UserModel_Serializer(serializers.ModelSerializer):
@@ -43,21 +55,23 @@ class Company_Serializer(serializers.ModelSerializer):
         if contacts:
             Contacts.objects.create(company=x, **contacts)
         return x
-    
+
     def update(self, instance, validated_data):
         contacts = validated_data.pop("contacts", None)
         x = super().update(instance, validated_data)
         if contacts:
             contact_instance, created = Contacts.objects.get_or_create(company=x)
-            
+
             for key, value in contacts.items():
                 setattr(contact_instance, key, value)
-            
+
             contact_instance.save()
             # (company=x, **contacts)
         return x
-    
+
+
 # ====================================================================
+
 
 class Notes_Serializer(serializers.ModelSerializer):
     class Meta:
@@ -65,11 +79,9 @@ class Notes_Serializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 # ============================================================================================
 
 # ============================================================================================
-
 
 
 """
