@@ -5,6 +5,5 @@ from .views import *
 router = SimpleRouter()
 router.register("", MultiSiteViewSet, basename="multisite")
 urlpatterns = [
-    path('multisitelist/', multisite.as_view(), name = "multisitelist")
-    
-    ] + router.urls
+    path("multisitelist/", multisite.as_view(), name="multisitelist"),
+] + router.urls

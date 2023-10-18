@@ -20,17 +20,17 @@ class Generate_Quote(models.Model):
     # class kva_charge(models.TextChoices):
     #     perday='perday',('perday')
     #     permonth='permonth',('permonth')
-    kva_charge = models.FloatField(
-        verbose_name="KVA Charge(pence)", max_length=128
+    kva_charge = models.FloatField(verbose_name="KVA Charge(pence)", max_length=128)
+    additional_charge = models.FloatField(
+        verbose_name="Additional Charge(£)", null=True, blank=True
     )
-    additional_charge = models.FloatField(verbose_name="Additional Charge(£)", null=True, blank=True)
-    extra_info = models.CharField(max_length=128, default="",null=True, blank=True)
+    extra_info = models.CharField(max_length=128, default="", null=True, blank=True)
     up_lift = models.FloatField(verbose_name="Up Lift")
     rates_already_include_at_uplift = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.supplier
+        return f"{self.site}-{self.supplier}"
 
     class Meta:
         verbose_name = "Generate Quote"
@@ -38,7 +38,7 @@ class Generate_Quote(models.Model):
 
 
 class Generate_Group_Quote(models.Model):
-    group_name = models.CharField(blank=True, null=True,max_length=50)
+    group_name = models.CharField(blank=True, null=True, max_length=50)
     group_detail = models.ManyToManyField("Generate_Quote")
 
     class Meta:
