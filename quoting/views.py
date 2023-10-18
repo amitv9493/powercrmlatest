@@ -80,6 +80,8 @@ from multisite.models import MultiSite
 
 
 class Multisite_Quoting(APIView):
+    queryset = MultiSite.objects.all()
+
     def get_object(self, pk):
         try:
             return MultiSite.objects.get(pk=pk)
