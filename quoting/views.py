@@ -95,7 +95,13 @@ class Multisite_Quoting(APIView):
             serializer = Multisite_QuotingSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
                 for i in multisite_object.sites.all():
-                    Generate_Quote.objects.create(**serializer.validated_data, site=i)
+                    quote_instance, created = Generate_Quote.objects.get_or_create(
+                        site=i
+                    )
+                    for key, value in serializer.validated_data.items():
+                        setattr(quote_instance, key, value)
+
+                    quote_instance.save(update_fields=serializer.validated_data.keys())
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         else:

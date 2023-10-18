@@ -81,21 +81,26 @@ class BillingAddressViewset(ModelViewSet):
                   Site Views
 ########################################################"""
 
+
 class Site_view(generics.ListAPIView):
-        
     queryset = Site.objects.select_related(
         "contacts",
         "site_address",
         "billing_address",
         "contacts",
         "company",
-        )
+    )
     serializer_class = Site_Serializer
     pagination_class = CustomPagination
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
     ordering_fields = ["date_created"]
     ordering = ["company_id"]
-    filterset_fields = ["group_name", "company", "support_contact", "loa_template"]
+    filterset_fields = [
+        "group_name",
+        "company",
+        "support_contact",
+        "loa_template",
+    ]
     search_fields = [
         "parent_company",
         "site_name",
@@ -109,19 +114,34 @@ class Site_view(generics.ListAPIView):
         "lead_source",
         "agent_email",
     ]
-    
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        ids = self.request.query_params.getlist("id", None)
+        if ids:
+            ids = list(map(int, ids))
+            queryset = queryset.filter(id__in=ids)
+        return queryset
+
     def get_serializer_class(self):
         if self.request.query_params.get("brief", None):
             return SiteCompanySerializer
         return super().get_serializer_class()
 
-    
+    def get_serializer(self, *args, **kwargs):
+        fields = self.request.query_params.get("fields", None)
+        if fields is not None:
+            fields = fields.split(",")
+            kwargs["fields"] = fields
+        return super().get_serializer(*args, **kwargs)
+
     @property
     def paginator(self):
-        if self.request.query_params.get("brief", None):
+        if self.request.query_params.get("pagination", None) == "false":
             return None
         return super().paginator
-    
+
+
 class Site_Create_view(generics.CreateAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Create_Serializer
@@ -131,7 +151,9 @@ class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     queryset = Site.objects.all()
     serializer_class = Site_Create_Serializer
 
+
 from rest_framework.decorators import api_view, permission_classes
+
 
 @api_view(["GET"])
 @permission_classes([])

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .models import *
 from multisite.models import MultiSite
 from contacts.serializers import ContactSerializer
+from api.serializers import DynamicModelSerializer
 
 """#######################################################
                   Company_Name_Serializer
@@ -81,7 +82,7 @@ class BillingAddressSerializer(serializers.ModelSerializer):
 ########################################################"""
 
 
-class Site_Serializer(serializers.ModelSerializer):
+class Site_Serializer(DynamicModelSerializer):
     billing_address = BillingAddressSerializer()
     site_address = SiteAddressSerializer()
     contacts = ContactSerializer()
@@ -91,16 +92,21 @@ class Site_Serializer(serializers.ModelSerializer):
         fields = "__all__"
         depth = 1
 
-class SiteCompanySerializer(serializers.ModelSerializer):
+
+class SiteCompanySerializer(DynamicModelSerializer):
     company = Company_Name_Serializers()
+
     class Meta:
         model = Site
-        fields = ("id","site_name", "company")
+        fields = ("id", "site_name", "company")
+
+
 class Site_Create_Serializer(serializers.ModelSerializer):
     billing_address = BillingAddressSerializer(required=False)
     site_address = SiteAddressSerializer(required=False)
     contacts = ContactSerializer(required=False)
     group_site = serializers.IntegerField(write_only=True, required=False)
+
     class Meta:
         model = Site
         fields = "__all__"
@@ -111,22 +117,20 @@ class Site_Create_Serializer(serializers.ModelSerializer):
         }
 
     def validate_group_site(self, value):
-
         try:
             MultiSite.objects.get(id=value)
         except:
-            raise serializers.ValidationError({"error":["Group does not exists"]})
+            raise serializers.ValidationError({"error": ["Group does not exists"]})
         return value
-    
+
     def create(self, validated_data):
-        
         group_id = validated_data.pop("group_site", None)
         site = super().create(validated_data)
         if group_id:
-            group_obj = MultiSite.objects.get(id=group_id)                
-            group_obj.sites.add(site)                    
+            group_obj = MultiSite.objects.get(id=group_id)
+            group_obj.sites.add(site)
         return site
-    
+
     def update(self, instance, validated_data):
         billing_address_data = validated_data.pop("billing_address", {})
 

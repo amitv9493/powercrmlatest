@@ -7,25 +7,29 @@ class Generate_Quote(models.Model):
     site = models.ForeignKey("sites.Site", on_delete=models.CASCADE)
     supplier = models.CharField(max_length=128, default="")
     product = models.CharField(max_length=128, default="")
-    term = models.IntegerField()
-    day_rate = models.FloatField(verbose_name="Day Rate(pence/kwh)")
-    night_rate = models.FloatField(verbose_name="Night Rate(pence/kwh)")
+    term = models.IntegerField(null=True)
+    day_rate = models.FloatField(verbose_name="Day Rate(pence/kwh)", null=True)
+    night_rate = models.FloatField(verbose_name="Night Rate(pence/kwh)", null=True)
     # class standing_charge(models.TextChoices):
     #     perday='perday',('perday')
     #     permonth='permonth',('permonth')
     #     peryear='peryear',('peryear')
     standing_charge = models.FloatField(
-        verbose_name="Standing Charge(pence)", max_length=128
+        verbose_name="Standing Charge(pence)", max_length=128, null=True
     )
     # class kva_charge(models.TextChoices):
     #     perday='perday',('perday')
     #     permonth='permonth',('permonth')
-    kva_charge = models.FloatField(verbose_name="KVA Charge(pence)", max_length=128)
+    kva_charge = models.FloatField(
+        verbose_name="KVA Charge(pence)", max_length=128, null=True
+    )
     additional_charge = models.FloatField(
-        verbose_name="Additional Charge(£)", null=True, blank=True
+        verbose_name="Additional Charge(£)",
+        null=True,
+        blank=True,
     )
     extra_info = models.CharField(max_length=128, default="", null=True, blank=True)
-    up_lift = models.FloatField(verbose_name="Up Lift")
+    up_lift = models.FloatField(verbose_name="Up Lift", null=True)
     rates_already_include_at_uplift = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
 
