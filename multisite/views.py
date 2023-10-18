@@ -35,8 +35,8 @@ class MultiSiteViewSet(ModelViewSet):
     #     return super().get_queryset()
 
     def get_serializer(self, *args, **kwargs):
-        kwargs["fields"] = ["id", "group_name"]
-        print(kwargs)
+        if self.request.query_params.get("brief", None):
+            kwargs["fields"] = ["id", "group_name"]
         return super().get_serializer(*args, **kwargs)
 
     # @silk_profile(name='MultiSiteViewSet list')
