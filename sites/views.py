@@ -137,7 +137,7 @@ class Site_view(generics.ListAPIView):
 
     @property
     def paginator(self):
-        if self.request.query_params.get("pagination", None) == "false":
+        if self.request.query_params.get("pagination", None) == "true":
             return None
         return super().paginator
 
