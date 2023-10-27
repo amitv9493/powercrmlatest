@@ -2,6 +2,7 @@ from .base import *
 from decouple import config
 
 from datetime import timedelta
+
 DEBUG = True
 DATABASES = {
     "default": {
@@ -12,9 +13,9 @@ DATABASES = {
         "HOST": "localhost",
         "PORT": "3306",
     },
-    "OPTIONS":{
-        "sql_mode":'STRICT_TRANS_TABLES',
-    }
+    "OPTIONS": {
+        "sql_mode": "STRICT_TRANS_TABLES",
+    },
 }
 
 STATIC_ROOT = config("STATIC_ROOT")
@@ -49,3 +50,9 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "localhost:3000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
