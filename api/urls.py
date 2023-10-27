@@ -18,6 +18,7 @@ urlpatterns = [
     path("quote/", include("quoting.urls")),
     path("supply/", include("supply.urls")),
     path("reminder/", include("reminder.urls")),
+    path("notes/", include("notes.urls")),
     # path("company/", include("company.urls")),
     # path("company/", include("company.urls")),
     # ======================================================
@@ -41,7 +42,6 @@ urlpatterns = [
     path("notes/", Notes_ListView.as_view()),
     path("notes/<int:pk>/", Notes_CRUD_View.as_view()),
     # COLLECTION OF ALL SUPPLIES
-    
     path("loa-templates/", LOATemplateView.as_view()),
     path("loa-templates/<int:pk>/", LOATemplateIDView.as_view()),
     # PROGRESS VIEW
