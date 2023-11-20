@@ -101,7 +101,7 @@ class New_supplies(models.Model):
       g_won_date=models.DateField(null=True, blank=True, verbose_name='Won Date')
       g_contract_start_date=models.DateField(null=True, blank=True, verbose_name='Contract Start Date')
       g_contract_end_date=models.DateField(null=True, blank=True, verbose_name='Contract End Date')
-      contract_length_months=models.PositiveIntegerField( null=True, blank=True, verbose_name='Contract Length (Months)')
+      g_contract_length_months=models.PositiveIntegerField( null=True, blank=True, verbose_name='Contract Length (Months)')
       g_contract_back_date=models.DateField(null=True, blank=True, verbose_name='Contract Back Date')
       g_supplier_reference=models.CharField(max_length=128,null=True, blank=True, verbose_name='Supply Reference')
       g_supplier_information1=models.CharField(max_length=128,null=True, blank=True, verbose_name='Supplier Information 1')
@@ -127,7 +127,8 @@ class New_supplies(models.Model):
       e_supplier_information3=models.CharField(max_length=128,null=True, blank=True, verbose_name=' Supplier Information 3')
       e_agent=models.BooleanField(default=None, null=True, blank=True, verbose_name='Agent')
       e_customer=models.BooleanField(default=None, null=True, blank=True, verbose_name='Customer')
-
+      
+      notes = models.TextField(null=True, blank=True)
       class Meta:
             verbose_name = "New supplies"
             verbose_name_plural= "New supplies"
