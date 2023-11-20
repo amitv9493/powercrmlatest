@@ -13,6 +13,8 @@ from django.contrib.auth import get_user_model
 from api.paginator import CustomPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import api_view, permission_classes
+
 
 User = get_user_model()
 # Create your views here.
@@ -152,7 +154,6 @@ class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = Site_Create_Serializer
 
 
-from rest_framework.decorators import api_view, permission_classes
 
 
 @api_view(["GET"])
