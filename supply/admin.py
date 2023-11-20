@@ -41,6 +41,7 @@ class Meter_detailAdmin(admin.ModelAdmin):
                     "e_related_meter",
                     "e_ley_meter",
                     "e_green_deal",
+                    "e_voltage",
                 ),
             },
         ),
