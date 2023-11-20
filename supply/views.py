@@ -16,7 +16,7 @@ class meter_detail_list_view(APIView):
             instance = Meter_detail.objects.get(site=pk)
             
         except Meter_detail.DoesNotExist:
-            return Response({"error":"Object with this site ID does not exists"}, status.HTTP_404_NOT_FOUND)
+            return Response({"error":"Object with this site ID does not exists"}, status.HTTP_400_BAD_REQUEST)
         
         serializer = Meter_Detail_Serialzer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -26,27 +26,20 @@ class meter_detail_list_view(APIView):
             instance = Meter_detail.objects.get(site=pk)
             
         except Meter_detail.DoesNotExist:
-            return Response({"error":"Object with this site ID does not exists"},400 )
+            return Response({"error":"Object with this site ID does not exists"},status.HTTP_400_BAD_REQUEST )
         
         serializer = Meter_Detail_Serialzer(instance, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         
-        # else:
-        #     return Response(
-        #         status=status.HTTP_400_BAD_REQUEST, data={"error": "data is not valid "}
-        #     )
-
-
-
 class Current_supplies_list_view(APIView):
 
     def get(self, request, pk, format=None):
         try:
             instance = Current_supplies.objects.get(site=pk)
         except Current_supplies.DoesNotExist:
-            return Response(status=status.HTTP_204_NO_CONTENT,data={"msg": "No data with this site"},
+            return Response(status=status.HTTP_400_BAD_REQUEST,data={"msg": "No data with this site"},
             )
 
         serializer = Current_supplies_Serializer(instance)
@@ -58,7 +51,7 @@ class Current_supplies_list_view(APIView):
             
         except Current_supplies.DoesNotExist:
             return Response(
-                status=status.HTTP_204_NO_CONTENT,
+                status=status.HTTP_400_BAD_REQUEST,
                 data={"msg": "No data with this site"},
             )
 
@@ -77,7 +70,7 @@ class New_supplies_list_view(APIView):
             instance = New_supplies.objects.get(site=pk)
             
         except New_supplies.DoesNotExist:
-            return Response(status=status.HTTP_204_NO_CONTENT,data={"msg": "No data with this site"},)
+            return Response(status=status.HTTP_400_BAD_REQUEST,data={"msg": "No data with this site"},)
             
         serializer = New_supplies_Serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -87,19 +80,14 @@ class New_supplies_list_view(APIView):
             instance = New_supplies.objects.get(site=pk)
         except New_supplies.DoesNotExist:
             return Response(
-                status=status.HTTP_204_NO_CONTENT,
+                status=status.HTTP_400_BAD_REQUEST,
                 data={"msg": "No data with this site"},
             )
             
         serializer = New_supplies_Serializer(instance, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"msg": "data is not valid "}
-            )
-
 
 
 @api_view(["GET", "PATCH", "PUT"])
