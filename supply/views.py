@@ -16,7 +16,7 @@ class meter_detail_list_view(APIView):
             instance = Meter_detail.objects.get(site=pk)
             
         except Meter_detail.DoesNotExist:
-            return Response({"error":"Object with this site ID does not exists"}, 204)
+            return Response({"error":"Object with this site ID does not exists"}, status.HTTP_404_NOT_FOUND)
         
         serializer = Meter_Detail_Serialzer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -26,16 +26,17 @@ class meter_detail_list_view(APIView):
             instance = Meter_detail.objects.get(site=pk)
             
         except Meter_detail.DoesNotExist:
-            return Response({"error":"Object with this site ID does not exists"},204 )
+            return Response({"error":"Object with this site ID does not exists"},400 )
         
         serializer = Meter_Detail_Serialzer(instance, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"error": "data is not valid "}
-            )
+        
+        # else:
+        #     return Response(
+        #         status=status.HTTP_400_BAD_REQUEST, data={"error": "data is not valid "}
+        #     )
 
 
 
@@ -62,13 +63,10 @@ class Current_supplies_list_view(APIView):
             )
 
         serializer = Current_supplies_Serializer(instance, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"msg": "data is not valid "}
-            )
+
 
 
 

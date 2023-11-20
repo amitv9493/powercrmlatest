@@ -5,20 +5,21 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 class Meter_Detail_Serialzer(serializers.ModelSerializer):
     class Meta:
         model = Meter_detail
-        fields = "__all__"
+        exclude = ("site","id",)
+
 
 
 class Current_supplies_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Current_supplies
-        fields = "__all__"
-
+        exclude =('site',"id",)        
+        
 
 class New_supplies_Serializer(serializers.ModelSerializer):
     class Meta:
         model = New_supplies
-        fields = "__all__"
-
+        exclude =('site',"id",)        
+        
 
 
 class SupplyDetailSerializer(WritableNestedModelSerializer):
