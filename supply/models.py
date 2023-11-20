@@ -109,6 +109,7 @@ class New_supplies(models.Model):
       g_supplier_information3=models.CharField(max_length=128,null=True, blank=True, verbose_name='Supplier Information 3')
       g_agent=models.BooleanField(default=None, null=True, blank=True, verbose_name='Agent')
       g_customer=models.BooleanField(default=None,null=True, blank=True, verbose_name='Customer')
+      g_notes = models.TextField(null=True, blank=True)
 
       # Electricity_new_supplies
       e_supplier=models.CharField(max_length=128,null=True, blank=True, verbose_name='Supplier')
@@ -127,8 +128,7 @@ class New_supplies(models.Model):
       e_supplier_information3=models.CharField(max_length=128,null=True, blank=True, verbose_name=' Supplier Information 3')
       e_agent=models.BooleanField(default=None, null=True, blank=True, verbose_name='Agent')
       e_customer=models.BooleanField(default=None, null=True, blank=True, verbose_name='Customer')
-      
-      notes = models.TextField(null=True, blank=True)
+      e_notes = models.TextField(null=True, blank=True)
       class Meta:
             verbose_name = "New supplies"
             verbose_name_plural= "New supplies"
