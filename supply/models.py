@@ -12,7 +12,7 @@ class contract_type(models.TextChoices):
          GasDomestic=' GasDomestic',('GasDomestic')
 
 class Meter_detail(models.Model):
-      site =  models.ForeignKey("sites.Site", on_delete=models.CASCADE)
+      site =  models.OneToOneField("sites.Site", on_delete=models.CASCADE)
 
       # Electricity_meter_detail
       e_mpan_topline=models.CharField(max_length=128, null=True, blank=True, verbose_name = "MPAN Topline")
@@ -41,7 +41,7 @@ class Meter_detail(models.Model):
 
 class Current_supplies(models.Model):
          
-      site =  models.ForeignKey("sites.Site", on_delete=models.CASCADE)
+      site =  models.OneToOneField("sites.Site", on_delete=models.CASCADE)
       # Gas_current_supplies
       g_supplier=models.CharField(max_length=128,verbose_name="Supplier",null=True ,blank=True)
       g_product=models.CharField(max_length=128, verbose_name="Product", null=True ,blank=True)
@@ -87,7 +87,7 @@ class Current_supplies(models.Model):
 class New_supplies(models.Model):
       
          
-      site =  models.ForeignKey("sites.Site", on_delete=models.CASCADE)
+      site =  models.OneToOneField("sites.Site", on_delete=models.CASCADE)
       
       # Gas_new_supplies
       
