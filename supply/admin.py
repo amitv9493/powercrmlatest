@@ -21,12 +21,12 @@ class Meter_detailAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        # (
-        #     "Select Site",
-        #     {
-        #         "fields": ("site",),
-        #     },
-        # ),
+        (
+            "Select Site",
+            {
+                "fields": ("site",),
+            },
+        ),
         (
             "Electrnic Meter Details",
             {
@@ -66,12 +66,12 @@ class Current_suppliesAdmin(admin.ModelAdmin):
         "site",
     )
     fieldsets = (
-        # (
-        #     "Select Site",
-        #     {
-        #         "fields": ("site",),
-        #     },
-        # ),
+        (
+            "Select Site",
+            {
+                "fields": ("site",),
+            },
+        ),
         (
             "Gas Meter Details",
             {
@@ -129,12 +129,12 @@ class New_suppliesAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-        # (
-        #     "Select Site",
-        #     {
-        #         "fields": ("site",),
-        #     },
-        # ),
+        (
+            "Select Site",
+            {
+                "fields": ("site",),
+            },
+        ),
         (
             "Gas Meter Details",
             {
