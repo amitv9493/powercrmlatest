@@ -25,7 +25,7 @@ class Meter_detail(models.Model):
       e_related_meter=models.BooleanField(default=None, null=True, blank=True, verbose_name = "Related Meter")
       e_ley_meter=models.BooleanField(default=None, null=True, blank=True, verbose_name = "Key Meter")
       e_green_deal=models.BooleanField(default=None, null=True, blank=True, verbose_name = "Green Deal")
-      e_voltage = models.FloatField(verbose_name="Voltage")
+      e_voltage = models.FloatField(verbose_name="Voltage", null=True)
 
       # Gas_meter_detail   
       g_mpr=models.CharField(max_length=128, null=True, blank=True,verbose_name="MPR")
