@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Meter_detail, Current_supplies, New_supplies, Supplies
+from .models import Meter_detail, Current_supplies, New_supplies, UsageRates
 
 
 @admin.register(Meter_detail)
@@ -80,8 +80,6 @@ class Current_suppliesAdmin(admin.ModelAdmin):
                     "g_supplier",
                     "g_product",
                     "g_contract_type",
-                    "g_igt_meter",
-                    "g_green_deal",
                     "g_won_date",
                     "g_contract_start_date",
                     "g_contract_end_date",
@@ -103,8 +101,6 @@ class Current_suppliesAdmin(admin.ModelAdmin):
                     "e_supplier",
                     "e_product",
                     "e_contract_type",
-                    "e_igt_meter",
-                    "e_green_deal",
                     "e_won_date",
                     "e_contract_start_date",
                     "e_contract_end_date",
@@ -143,8 +139,6 @@ class New_suppliesAdmin(admin.ModelAdmin):
                     "g_supplier",
                     "g_product",
                     "g_contract_type",
-                    "g_igt_meter",
-                    "g_green_deal",
                     "g_won_date",
                     "g_contract_start_date",
                     "g_contract_end_date",
@@ -167,8 +161,6 @@ class New_suppliesAdmin(admin.ModelAdmin):
                     "e_supplier",
                     "e_product",
                     "e_contract_type",
-                    "e_igt_meter",
-                    "e_green_deal",
                     "e_won_date",
                     "e_contract_start_date",
                     "e_contract_end_date",
@@ -181,23 +173,13 @@ class New_suppliesAdmin(admin.ModelAdmin):
                     "e_agent",
                     "e_customer",
                     "e_notes",
+                    "decimal",
                 ),
             },
         ),
     )
 
 
-# from .models import Old_Current_supplies, Old_Meter_detail, Old_New_supplies
-
-# @admin.register(Old_Meter_detail)
-# class Old_Meter_detailAdmin(admin.ModelAdmin):
-#     # inline_type = 'stacked'
-#     # inline_reverse = ['gas_meter_detail', ('electricity_meter_detail')]
-#     list_display = ['gas_meter_detail__serial_number']
-#     fieldsets = (
-#         ('gas meter detail', {
-#             "fields": (
-#                 'gas_meter_detail.serial_number',
-#             ),
-#         }),
-#     )
+@admin.register(UsageRates)
+class UsageRatesAdmin(admin.ModelAdmin):
+    pass
