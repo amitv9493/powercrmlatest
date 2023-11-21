@@ -1,7 +1,18 @@
-from powercrm.urls import *
-from .views import *
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+
+from .views import (
+    BillingAddressViewset,
+    Company_Name_View,
+    Group_Name_View,
+    Loa_Template_View,
+    Site_Create_view,
+    Site_RUD_View,
+    Site_view,
+    SiteAddressViewset,
+    Support_Contact_View,
+    recent_sites,
+)
 
 router = DefaultRouter()
 
@@ -11,7 +22,7 @@ router.register("get/billingaddress", BillingAddressViewset, basename="billing-a
 
 
 urlpatterns = [
-    path("get/site/", Site_view.as_view(),name="site-list"),
+    path("get/site/", Site_view.as_view(), name="site-list"),
     path("create/site/", Site_Create_view.as_view()),
     path("update/site/<int:pk>/", Site_RUD_View.as_view()),
     path("get/company_name/", Company_Name_View.as_view(), name="Company_Name_View"),

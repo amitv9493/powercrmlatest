@@ -1,20 +1,28 @@
-from typing import Any
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework import generics
-from rest_framework.permissions import DjangoModelPermissions, IsAdminUser
-from .models import *
-from company.models import *
-from .serializers import *
 from django.contrib.auth import get_user_model
-from api.paginator import CustomPagination
-from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.permissions import DjangoModelPermissions, IsAdminUser
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from api.paginator import CustomPagination
+from company.models import Company
+
+from .models import BillingAddress, Loa_Template, Site, SiteAddress, group
+from .serializers import (
+    BillingAddressSerializer,
+    Company_Name_Serializers,
+    Group_Name_Serializers,
+    Loa_Template_Serializers,
+    Site_Create_Serializer,
+    Site_Serializer,
+    SiteAddressSerializer,
+    SiteCompanySerializer,
+    Support_Contact_Serializers,
+)
 
 User = get_user_model()
 # Create your views here.
@@ -154,10 +162,9 @@ class Site_RUD_View(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = Site_Create_Serializer
 
 
-
-
 @api_view(["GET"])
 @permission_classes([])
 def recent_sites(request):
     queryset = Site.objects.all().order_by("-date_created")[:10]
+    return Response(Site_Serializer(queryset, many=True).data)
     return Response(Site_Serializer(queryset, many=True).data)

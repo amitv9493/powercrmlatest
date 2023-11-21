@@ -1,6 +1,8 @@
 from django.contrib import admin
+
 from contacts.models import Contacts
-from .models import *
+
+from .models import BillingAddress, Loa_Template, Site, SiteAddress, group
 
 
 class ContactInline(admin.StackedInline):
@@ -114,4 +116,5 @@ class Loa_TemplateAdmin(admin.ModelAdmin):
 
 @admin.register(group)
 class groupAdmin(admin.ModelAdmin):
+    pass
     pass

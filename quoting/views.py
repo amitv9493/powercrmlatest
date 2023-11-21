@@ -1,11 +1,20 @@
-from rest_framework import generics, status
-from .models import *
-from rest_framework.response import Response
-from .serializers import *
-from rest_framework.decorators import api_view
-from rest_framework.decorators import permission_classes
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+
+from multisite.models import MultiSite
+
+from .models import Generate_Group_Quote, Generate_Quote, Quoting_Settings
+from .serializers import (
+    GenerateQuoteSerializer,
+    GroupQuoteGETSerializer,
+    GroupQuotePOSTSerializer,
+    Multisite_QuotingSerializer,
+    QuoteSettingSerializer,
+)
 
 # Create your views here.
 
@@ -54,9 +63,6 @@ def QuoteSettingInstanceView(request, pk):
             )
 
 
-from rest_framework.viewsets import ModelViewSet
-
-
 # GROUP QUOTE
 class GroupQuoteView(ModelViewSet):
     serializer_class = GroupQuoteGETSerializer
@@ -74,9 +80,6 @@ def recent_quotes(request):
     queryset = Generate_Quote.objects.all().order_by("-date_created")[:10]
 
     return Response(GenerateQuoteSerializer(queryset, many=True).data)
-
-
-from multisite.models import MultiSite
 
 
 class Multisite_Quoting(APIView):

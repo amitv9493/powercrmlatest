@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import General_Document, Company_Document, Site_Document
+from .models import Company_Document, General_Document, Site_Document
 
 
 @admin.register(General_Document)

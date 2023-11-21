@@ -1,6 +1,15 @@
 from django.urls import path
-from .views import *
 from rest_framework.routers import DefaultRouter
+
+from .views import (
+    GenerateQuoteIDView,
+    GenerateQuoteView,
+    GroupQuoteView,
+    Multisite_Quoting,
+    QuoteSettingInstanceView,
+    QuoteSettingView,
+    recent_quotes,
+)
 
 router = DefaultRouter()
 router.register(prefix="group-quote", viewset=GroupQuoteView, basename="general-quote")

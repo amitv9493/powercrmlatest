@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models import *
+from .models import Company_Reminder, General_Reminder, Site_Reminder
+
 
 class CompanyReminderSerializer(serializers.ModelSerializer):
     class Meta:

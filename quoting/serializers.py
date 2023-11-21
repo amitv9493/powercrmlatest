@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from .models import Generate_Quote, Generate_Group_Quote, Quoting_Settings
 
 # from sites.serializers import Site_Create_Serializer
 from multisite.serializers import Site_Serializer
+
+from .models import Generate_Group_Quote, Generate_Quote, Quoting_Settings
 
 
 class GenerateQuoteSerializer(serializers.ModelSerializer):
@@ -36,9 +37,6 @@ class GroupQuotePOSTSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-from sites.models import Site
-
-
 class Multisite_QuotingSerializer(serializers.Serializer):
     supplier = serializers.CharField()
     product = serializers.CharField()
@@ -58,4 +56,5 @@ class Multisite_QuotingSerializer(serializers.Serializer):
     def create(self, validated_data):
         multisite_object = self.context.get("multisite")
 
+        return multisite_object
         return multisite_object

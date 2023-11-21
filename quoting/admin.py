@@ -1,10 +1,6 @@
 from django.contrib import admin
 
-from .models import Generate_Quote,Generate_Group_Quote,Quoting_Settings
-from django.forms import TextInput, Textarea
-from django.db import models
-
-
+from .models import Generate_Group_Quote, Generate_Quote, Quoting_Settings
 
 # class Generate_QuoteAdmin(admin.ModelAdmin):
 #     formfield_overrides = {
@@ -13,10 +9,12 @@ from django.db import models
 #     }
 
 
-
 admin.site.register(Generate_Quote)
 admin.site.register(Generate_Group_Quote)
 
+
 class Quoting_SettingsAdmin(admin.ModelAdmin):
- list_display=('allow_custom_contract_end_date',)
-admin.site.register(Quoting_Settings,Quoting_SettingsAdmin)
+    list_display = ("allow_custom_contract_end_date",)
+
+
+admin.site.register(Quoting_Settings, Quoting_SettingsAdmin)

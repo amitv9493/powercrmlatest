@@ -1,7 +1,6 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -32,7 +31,7 @@ class Site(models.Model):
     group_name = models.ForeignKey(
         group, on_delete=models.SET_NULL, null=True, blank=True
     )
-    
+
     site_name = models.CharField(max_length=128)
     company = models.ForeignKey(
         "company.Company", on_delete=models.CASCADE, verbose_name="Company Name"

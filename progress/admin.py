@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 from .models import (
-    Current_gas_progress,
     Current_electricity_progress,
-    New_gas_progress,
+    Current_gas_progress,
     New_electricity_progress,
+    New_gas_progress,
 )
 
 

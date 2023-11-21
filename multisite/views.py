@@ -1,15 +1,16 @@
 # Create your views here.
 
-from rest_framework.viewsets import ModelViewSet
 from django.db.models import Prefetch
-from .models import MultiSite
-from .serializers import MultiSiteSerializer
+from rest_framework.generics import ListAPIView
+from rest_framework.viewsets import ModelViewSet
+
 from api.paginator import CustomPagination
 
 # from silk.profiling.profiler import silk_profile
 from sites.models import Site
-from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
+
+from .models import MultiSite
+from .serializers import MultiSiteSerializer
 
 
 class MultiSiteViewSet(ModelViewSet):
@@ -46,5 +47,7 @@ class MultiSiteViewSet(ModelViewSet):
 
 class multisite(ListAPIView):
     queryset = MultiSite.objects.all()
+    serializer_class = MultiSiteSerializer
+    pagination_class = None
     serializer_class = MultiSiteSerializer
     pagination_class = None

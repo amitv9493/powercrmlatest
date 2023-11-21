@@ -1,10 +1,12 @@
-from rest_framework import serializers
-from company.models import *
 from django.contrib.auth.models import User
-from .models import *
-from multisite.models import MultiSite
-from contacts.serializers import ContactSerializer
+from rest_framework import serializers
+
 from api.serializers import DynamicModelSerializer
+from company.models import Company
+from contacts.serializers import ContactSerializer
+from multisite.models import MultiSite
+
+from .models import BillingAddress, Loa_Template, Site, SiteAddress, group
 
 """#######################################################
                   Company_Name_Serializer
@@ -119,7 +121,7 @@ class Site_Create_Serializer(serializers.ModelSerializer):
     def validate_group_site(self, value):
         try:
             MultiSite.objects.get(id=value)
-        except:
+        except MultiSite.DoesNotExist:
             raise serializers.ValidationError({"error": ["Group does not exists"]})
         return value
 

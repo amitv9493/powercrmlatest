@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
-
-
 from .models import MultiSite
+
+# Register your models here.
 
 
 @admin.register(MultiSite)

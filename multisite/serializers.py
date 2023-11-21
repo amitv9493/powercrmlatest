@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from rest_framework.fields import empty
-from .models import MultiSite
-from sites.serializers import Site_Create_Serializer
+
+from api.serializers import DynamicModelSerializer
 from sites.models import Site
+
+from .models import MultiSite
 
 
 class Site_Serializer(serializers.ModelSerializer):
@@ -17,9 +18,6 @@ class Site_Serializer(serializers.ModelSerializer):
             "company",
             "parent_company",
         )
-
-
-from api.serializers import DynamicModelSerializer
 
 
 class MultiSiteSerializer(DynamicModelSerializer):
@@ -38,5 +36,7 @@ class MultiSiteSerializer(DynamicModelSerializer):
 
 # class MultiSiteSerializer(serializers.ModelSerializer):
 #     class Meta:
+#         model =  MultiSite
+#         fields = ["id", "group_name", "group_type"]
 #         model =  MultiSite
 #         fields = ["id", "group_name", "group_type"]

@@ -1,5 +1,4 @@
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
@@ -71,7 +70,9 @@ class Company(models.Model):
 
     reference = models.CharField(max_length=128, blank=True, null=True)
 
-    parent_company = models.CharField( null=True, blank=True, help_text="Optional", max_length=128)
+    parent_company = models.CharField(
+        null=True, blank=True, help_text="Optional", max_length=128
+    )
 
     def __str__(self):
         return self.name
