@@ -173,7 +173,7 @@ class New_suppliesAdmin(admin.ModelAdmin):
                     "e_agent",
                     "e_customer",
                     "e_notes",
-                    "decimal",
+                    # "usage_rates",
                 ),
             },
         ),

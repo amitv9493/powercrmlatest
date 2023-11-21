@@ -22,13 +22,23 @@ User = get_user_model()
 class DynamicModelSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         fields = kwargs.pop("fields", None)
+        exclude = kwargs.pop("fields", None)
+        
         print("fields", fields)
         super().__init__(*args, **kwargs)
-        if fields is not None:
+        if fields is not None and exclude is not None:
+            raise serializers.ValidationError("Got fields and exclude. Both variables are not allowed.")
+        if fields:
             allowed = set(fields)
             existing = set(self.fields)
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
+        
+        if exclude:
+            exclude_fields = set(fields)
+            for field_name in exclude_fields:
+                self.fields.pop(field_name)
+        
 
 
 class UserModel_Serializer(serializers.ModelSerializer):

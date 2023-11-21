@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 
 class contract_type(models.TextChoices):
     ElecAMR = "ElecAMR", ("ElecAMR")
@@ -13,31 +14,90 @@ class contract_type(models.TextChoices):
     GasCommercial = "GasCommercial", ("GasCommercial")
     GasDomestic = " GasDomestic", ("GasDomestic")
 
-class UsageRates(models.Model):
-      class usageChoices(models.TextChoices):
-            GAS = "GAS", "GAS"
-            ELE = "ELECTRICITY", "ELECTRICITY"
-      stading_charge = models.DecimalField(_("Standing Charge (pence/day)"), max_digits=6, decimal_places=4, null=True, blank=True)
-      standing_charge_uplift = models.DecimalField(_("Standing Charge Uplift (pence/day)"),max_digits=10, decimal_places=4, null=True, blank=True)
-      unit_rate_uplift = models.DecimalField(_("Unit Rate Uplift (pence/day)"),max_digits=10, decimal_places=4, null=True, blank=True)
-      kva_rate = models.DecimalField(_("kVA Rate (pence/day)"), max_digits=6, decimal_places=4, null=True, blank=True)
-      
-      feed_in_tariff = models.DecimalField(_("Feed-in Tariff (FiT)"), max_digits=10, decimal_places=4, null=True, blank=True)
-      
-      annual_day_usage = models.IntegerField(_("Annual Day Usage (kWh)"), null=True, blank=True)
-      day_rate = models.DecimalField(_("Day Rate (pence/kWh)"), max_digits=6, decimal_places=4, null=True, blank=True)
-      night_rate = models.DecimalField(_("Night Rate (pence/kWh)"), max_digits=6, decimal_places=4, null=True, blank=True)
-      
-      annual_night_usage = models.IntegerField(_("Annual Day Usage (kWh)"), null=True, blank=True)
-      evening_rate = models.DecimalField("Evening/Weekend Rate (pence/kWh)", max_digits=6, decimal_places=4, null=True, blank=True)
-      
-      usage_type = models.CharField(max_length=255, choices= usageChoices.choices)
-      annual_usage = models.IntegerField(_("Annual Usage (kWh)"), null=True, blank=True)
-      limits = models.Q(app_label="supply", model="current_supplies") |models.Q(app_label="supply", model="new_supplies")
-      content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, limit_choices_to=limits)
-      object_id = models.PositiveIntegerField()
-      content_object = GenericForeignKey("content_type", "object_id")
 
+class UsageRates(models.Model):
+	class usageChoices(models.TextChoices):
+		GAS = "GAS", "GAS"
+		ELE = "ELECTRICITY", "ELECTRICITY"
+
+	stading_charge = models.DecimalField(
+		_("Standing Charge (pence/day)"),
+		max_digits=6,
+		decimal_places=4,
+		null=True,
+		blank=True,
+	)
+	standing_charge_uplift = models.DecimalField(
+		_("Standing Charge Uplift (pence/day)"),
+		max_digits=10,
+		decimal_places=4,
+		null=True,
+		blank=True,
+	)
+	unit_rate_uplift = models.DecimalField(
+		_("Unit Rate Uplift (pence/day)"),
+		max_digits=10,
+		decimal_places=4,
+		null=True,
+		blank=True,
+	)
+	kva_rate = models.DecimalField(
+		_("kVA Rate (pence/day)"), max_digits=6, decimal_places=4, null=True, blank=True
+	)
+	rate = models.DecimalField(
+		_("kVA Rate (pence/kWh)"), max_digits=6, decimal_places=4, null=True, blank=True
+	)
+	feed_in_tariff = models.DecimalField(
+		_("Feed-in Tariff (FiT)"),
+		max_digits=10,
+		decimal_places=4,
+		null=True,
+		blank=True,
+	)
+
+	annual_day_usage = models.IntegerField(
+		_("Annual Day Usage (kWh)"), null=True, blank=True
+	)
+	day_rate = models.DecimalField(
+		_("Day Rate (pence/kWh)"), max_digits=6, decimal_places=4, null=True, blank=True
+	)
+	night_rate = models.DecimalField(
+		_("Night Rate (pence/kWh)"),
+		max_digits=6,
+		decimal_places=4,
+		null=True,
+		blank=True,
+	)
+
+	annual_night_usage = models.IntegerField(
+		_("Annual Day Usage (kWh)"), null=True, blank=True
+	)
+	evening_rate = models.DecimalField(
+		"Evening/Weekend Rate (pence/kWh)",
+		max_digits=6,
+		decimal_places=4,
+		null=True,
+		blank=True,
+	)
+	annual_evening_usage = models.IntegerField(
+		_("Annual Evening/Weekend Usage (kWh)"), null=True, blank=True
+	)
+	usage_type = models.CharField(max_length=255, choices=usageChoices.choices)
+	annual_usage = models.IntegerField(_("Annual Usage (kWh)"), null=True, blank=True)
+ 
+	limits = models.Q(app_label="supply", model="current_supplies") | models.Q(
+		app_label="supply", model="new_supplies"
+	) | models.Q(app_label='quoting', model="generate_quote")
+	content_type = models.ForeignKey(
+		ContentType, on_delete=models.CASCADE, limit_choices_to=limits
+	)
+	object_id = models.PositiveIntegerField()
+	content_object = GenericForeignKey("content_type", "object_id")
+
+	def __str__(self) -> str:
+		return self.usage_type
+	class Meta:
+		unique_together = [['content_type','object_id','usage_type']]
 class Supply(models.Model):
     site = models.OneToOneField("sites.Site", on_delete=models.CASCADE)
     # Gas_new_supplies
@@ -192,18 +252,19 @@ class Meter_detail(models.Model):
 
 
 class Current_supplies(Supply):
-    class Meta:
-        verbose_name = "Current supplies"
-        verbose_name_plural = "Current supplies"
+	usage_rates = GenericRelation(UsageRates,related_query_name="new_supplies")
+	class Meta:
+		verbose_name = "Current supplies"
+		verbose_name_plural = "Current supplies"
 
 
 class New_supplies(Supply):
-    g_notes = models.TextField(null=True, blank=True)
-    e_notes = models.TextField(null=True, blank=True)
-
-    class Meta:
-        verbose_name = "New supplies"
-        verbose_name_plural = "New supplies"
+	g_notes = models.TextField(null=True, blank=True)
+	e_notes = models.TextField(null=True, blank=True)
+	usage_rates = GenericRelation(UsageRates,related_query_name="new_supplies")
+	class Meta:
+		verbose_name = "New supplies"
+		verbose_name_plural = "New supplies"
 
 
 class Supplies(models.Model):
