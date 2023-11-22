@@ -1,7 +1,15 @@
-from rest_framework import serializers
-from .models import *
 from drf_writable_nested.serializers import WritableNestedModelSerializer
+from rest_framework import serializers
+
 from api.serializers import DynamicModelSerializer
+
+from .models import (
+    Current_supplies,
+    Meter_detail,
+    New_supplies,
+    Supplies,
+    UsageRates,
+)
 
 
 class NewSupplierGASUsage(serializers.Serializer):
