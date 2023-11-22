@@ -3,13 +3,7 @@ from rest_framework import serializers
 
 from api.serializers import DynamicModelSerializer
 
-from .models import (
-    Current_supplies,
-    Meter_detail,
-    New_supplies,
-    Supplies,
-    UsageRates,
-)
+from .models import Current_supplies, Meter_detail, New_supplies, Supplies, UsageRates
 
 
 class NewSupplierGASUsage(serializers.Serializer):
@@ -128,9 +122,6 @@ class Current_supplies_Serializer(serializers.ModelSerializer):
                 setattr(gas_usage_rate_instance, key, value)
 
             gas_usage_rate_instance.save(update_fields=list(gas_usage_rate.keys()))
-        elif gas_usage_rate:
-            gas_usage_rate["usage_type"] = "GAS"
-            instance.usage_rates.create(**gas_usage_rate)
 
         if electric_usage_rate and elec_usage_rate_instance:
             for key, value in electric_usage_rate.items():
@@ -139,11 +130,6 @@ class Current_supplies_Serializer(serializers.ModelSerializer):
             elec_usage_rate_instance.save(
                 update_fields=list(electric_usage_rate.keys())
             )
-        elif electric_usage_rate:
-            electric_usage_rate["usage_type"] = "ELECTRIC"
-
-            instance.usage_rates.create(**electric_usage_rate)
-
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
@@ -155,14 +141,10 @@ class Current_supplies_Serializer(serializers.ModelSerializer):
             instance.usage_rates.all().filter(usage_type="ELECTRIC").first()
         )
 
-        if gas_usages_rate_instance:
-            data["gas_usage_rate"] = CurrentSupplyGASUsage(
-                gas_usages_rate_instance
-            ).data
-        if electric_usages_rate_instance:
-            data["electric_usage_rate"] = CurrentSupplyELECTRICUsage(
-                electric_usages_rate_instance
-            ).data
+        data["gas_usage_rate"] = CurrentSupplyGASUsage(gas_usages_rate_instance).data
+        data["electric_usage_rate"] = CurrentSupplyELECTRICUsage(
+            electric_usages_rate_instance
+        ).data
 
         return data
 
@@ -191,9 +173,6 @@ class New_supplies_Serializer(serializers.ModelSerializer):
                 setattr(gas_usage_rate_instance, key, value)
 
             gas_usage_rate_instance.save(update_fields=list(gas_usage_rate.keys()))
-        elif gas_usage_rate:
-            gas_usage_rate["usage_type"] = "GAS"
-            instance.usage_rates.create(**gas_usage_rate)
 
         if electric_usage_rate and elec_usage_rate_instance:
             for key, value in electric_usage_rate.items():
@@ -202,10 +181,6 @@ class New_supplies_Serializer(serializers.ModelSerializer):
             elec_usage_rate_instance.save(
                 update_fields=list(electric_usage_rate.keys())
             )
-        elif electric_usage_rate:
-            electric_usage_rate["usage_type"] = "ELECTRIC"
-
-            instance.usage_rates.create(**electric_usage_rate)
 
         return super().update(instance, validated_data)
 
@@ -219,12 +194,10 @@ class New_supplies_Serializer(serializers.ModelSerializer):
         )
         # usage_rates = {}
 
-        if gas_usages_rate_instance:
-            data["gas_usage_rate"] = NewSupplierGASUsage(gas_usages_rate_instance).data
-        if electric_usages_rate_instance:
-            data["electric_usage_rate"] = NewSupplierELECTRICUsage(
-                electric_usages_rate_instance
-            ).data
+        data["gas_usage_rate"] = NewSupplierGASUsage(gas_usages_rate_instance).data
+        data["electric_usage_rate"] = NewSupplierELECTRICUsage(
+            electric_usages_rate_instance
+        ).data
         return data
 
 
