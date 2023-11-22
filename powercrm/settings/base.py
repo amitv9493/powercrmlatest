@@ -1,8 +1,7 @@
+import os
 from pathlib import Path
 
 from decouple import config
-
-import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -36,7 +35,7 @@ INSTALLED_APPS = [
     "django_countries",
     "notes",
     "emails",
-    "supply",
+    "supply.apps.SupplyConfig",
     "rest_framework",
     "corsheaders",
     "api",
