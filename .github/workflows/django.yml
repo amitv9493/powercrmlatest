@@ -30,4 +30,4 @@ jobs:
         export DJANGO_SETTINGS_MODULE=powercrm.settings.local
     - name: Run Tests
       run: |
-        python manage.py test
+        python manage.py test --settings='powercrm.settings.local'
