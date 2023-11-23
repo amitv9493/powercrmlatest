@@ -1,10 +1,34 @@
-from django.urls import path, include
-
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import *
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import LoginView
+from .views import (
+    AllUsers_view,
+    BusinessTypeView,
+    ChangePasswordView,
+    Company_RUD_View,
+    Company_view,
+    CompanyDocumentView,
+    CurrentElectricityProgressIDView,
+    CurrentElectricityProgressView,
+    CurrentGasProgressIDView,
+    CurrentGasProgressView,
+    GeneralDocumentView,
+    LOATemplateIDView,
+    LOATemplateView,
+    LoginView,
+    NewElectricityProgressIDView,
+    NewElectricityProgressView,
+    NewGasProgressIDView,
+    NewGasProgressView,
+    Notes_CRUD_View,
+    Notes_ListView,
+    PasswordResetView,
+    ProfileView,
+    RegistrationView,
+    SendPasswordResetView,
+    SiteDocumentView,
+)
 
 router = DefaultRouter()
 router.register("general-document", GeneralDocumentView, basename="general-document")
