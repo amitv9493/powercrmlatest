@@ -14,8 +14,8 @@ jobs:
         python-version: [3.9]
 
     env:
-      DJANGO_SECRET_KEY: ${{ env.DJANGO_SECRET_KEY }}
-
+      SECRET_KEY: 'django-insecure-9pqxw7j^m&jfmii8plfu1w&^rr+lerncd^fcjia)l&kz78c+kk'
+      STATIC: 'static/'
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
