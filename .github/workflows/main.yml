@@ -1,8 +1,9 @@
 name: Deploy Private GitHub repository to cPanel
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Django CI"]
+    types:
+      - completed
 jobs:
   FTP-Deploy-Action:
     name: FTP-Deploy-Action

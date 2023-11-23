@@ -33,3 +33,4 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test --settings='powercrm.settings.local'
+        echo "::set-output name=result::tests_passed"
