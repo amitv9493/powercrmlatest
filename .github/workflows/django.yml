@@ -15,7 +15,7 @@ jobs:
 
     env:
       SECRET_KEY: 'django-insecure-9pqxw7j^m&jfmii8plfu1w&^rr+lerncd^fcjia)l&kz78c+kk'
-      STATIC: 'static/'
+      STATIC_URL: 'static/'
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
