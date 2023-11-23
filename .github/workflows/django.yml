@@ -27,7 +27,7 @@ jobs:
         pip install -r new.txt
     - name: Set up Django settings
       run: |
-        export DJANGO_SETTINGS_MODULE=powercrm.settings.prod
+        export DJANGO_SETTINGS_MODULE=powercrm.settings.local
     - name: Run Tests
       run: |
         python manage.py test
