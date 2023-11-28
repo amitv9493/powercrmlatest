@@ -1,7 +1,8 @@
-from .base import *
+from datetime import timedelta
+
 from decouple import config
 
-from datetime import timedelta
+from .base import *  # noqa: F403
 
 DEBUG = True
 DATABASES = {
@@ -52,6 +53,12 @@ SIMPLE_JWT = {
 }
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://localhost:3000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+CORS_ORIGIN_WHITELIST = [
     "https://localhost:3000",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
