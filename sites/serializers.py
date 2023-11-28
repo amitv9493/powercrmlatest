@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from api.serializers import DynamicModelSerializer
@@ -8,6 +8,7 @@ from multisite.models import MultiSite
 
 from .models import BillingAddress, Loa_Template, Site, SiteAddress, group
 
+User = get_user_model()
 """#######################################################
                   Company_Name_Serializer
 ########################################################"""
@@ -27,7 +28,10 @@ class Company_Name_Serializers(serializers.ModelSerializer):
 class Support_Contact_Serializers(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username")
+        fields = (
+            "id",
+            "username",
+        )
 
 
 """#######################################################

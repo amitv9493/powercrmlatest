@@ -1,16 +1,18 @@
-from .base import *
+from pathlib import Path
+
+from .base import *  # noqa: F403
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 DEBUG = True
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
-INSTALLED_APPS += [
+INSTALLED_APPS += [  # noqa: F405
     "django_extensions",
     # "silk",
     # "debug_toolbar",
@@ -28,6 +30,6 @@ SESSION_COOKIE_HTTPONLY = True
 
 # MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-SILKY_PYTHON_PROFILER =True
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+SILKY_PYTHON_PROFILER = True

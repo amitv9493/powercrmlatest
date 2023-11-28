@@ -1,34 +1,53 @@
+from django.contrib.auth import authenticate, get_user_model
 from django.shortcuts import render
-from rest_framework.views import APIView
+from dotenv import load_dotenv
+from rest_framework import authentication, generics, permissions, status
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from amazon.auth.base import Token
+from company.models import Business_type, Company
+from document.models import Company_Document, General_Document, Site_Document
+from notes.models import Note
+from progress.models import (
+    Current_electricity_progress,
+    Current_gas_progress,
+    New_electricity_progress,
+    New_gas_progress,
+)
+from sites.models import Loa_Template
+
+from .paginator import CustomPagination
+from .renderers import UserRenderes
 from .serializers import (
+    BusinessTypeSerializer,
     ChangePasswordSerializer,
+    Company_Serializer,
+    CompanyDocumentSerializer,
+    CurrentElectricityProgressSerializer,
+    CurrentGasProgressSerializer,
+    GeneralDocumentSerializer,
+    LOATemplateaSerailzer,
     LoginSerializer,
+    NewElectricityProgressSerializer,
+    NewGasProgressSerializer,
+    Notes_Serializer,
     PasswordResetSerializer,
     RegisterSerializer,
     ResetPasswordSerializer,
+    SiteDocumentSerializer,
+    UserModel_Serializer,
     UserProfileSerializer,
 )
-from rest_framework import status
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework import generics
-from .serializers import *
-from .renderers import UserRenderes
-from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.parsers import MultiPartParser
-
-from .paginator import CustomPagination
-from rest_framework.permissions import IsAuthenticated
-
-from dotenv import load_dotenv
 
 load_dotenv()
-from amazon.auth.base import Token
 
 token = Token()
+User = get_user_model()
 # Create your views here.
 
 
@@ -52,7 +71,7 @@ class RegistrationView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
+            serializer.save()
 
             return Response(
                 {"msg": "Registration successful"}, status=status.HTTP_201_CREATED
@@ -179,7 +198,6 @@ class Notes_CRUD_View(generics.RetrieveUpdateDestroyAPIView):
 # from rest_framework
 
 
-
 class GeneralDocumentView(ModelViewSet):
     parser_classes = [MultiPartParser]
 
@@ -206,8 +224,6 @@ class BusinessTypeView(generics.ListCreateAPIView):
     serializer_class = BusinessTypeSerializer
 
     pagination_class = None
-
-
 
 
 class LOATemplateView(generics.ListCreateAPIView):
@@ -276,8 +292,6 @@ class LOATemplateIDView(generics.RetrieveUpdateDestroyAPIView):
 ==============================================================================
 
 """
-from rest_framework import authentication
-from rest_framework import permissions
 
 
 class CurrentGasProgressView(generics.ListCreateAPIView):
@@ -419,8 +433,6 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
 #     request.session["access_token"] = user_data.access_token
 
 
-
-
 # class Orders(APIView):
 #     permission_classes = [permissions.IsAuthenticated]
 #     authentication_classes = [
@@ -463,17 +475,17 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
 # class hello(APIView):
 #     permission_classes = [permissions.AllowAny]
 #     # authentication_classes = [authentication.a]
-    
+
 #     def post(self, request):
-        
+
 #         serializer = LoginSerializer(data=request.data)
 #         if serializer.is_valid(raise_exception=True):
 #             username = serializer.data.get("username")
 #             password = serializer.data.get("password")
-            
+
 #             user = authenticate(username=username, password=password)
-            
+
 #             if user:
 #                 login(request, user)
-                
+
 #             return Response({"msg":"logged In successfully"},status=200)
