@@ -20,3 +20,6 @@ requests==2.31.0
 django-mysql==4.10.0
 mysqlclient==2.1.1
 gunicorn
+python-dotenv==1.0.0
+
+
