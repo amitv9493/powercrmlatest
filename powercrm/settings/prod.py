@@ -1,10 +1,15 @@
+import os
 from datetime import timedelta
 
 from decouple import config
+from dotenv import load_dotenv
 
 from .base import *  # noqa: F403
 
+load_dotenv()
 DEBUG = True
+
+db = os.environ.get("db")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
@@ -19,12 +24,20 @@ DATABASES = {
     },
 }
 
-STATIC_ROOT = config("STATIC_ROOT")
+if db:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",  # noqa: F405
+        }
+    }
 
-MEDIA_ROOT = config("MEDIA_ROOT")
+print(db)
+STATIC_ROOT = os.environ.get("STATIC_ROOT")
 
-MEDIA_URL = config("MEDIA_URL")
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
 
+MEDIA_URL = os.environ.get("MEDIA_URL")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

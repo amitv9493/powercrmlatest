@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   backend:
     build: .
@@ -8,30 +8,31 @@ services:
       - "8000"
     volumes:
       - ./:/app
-      - /var/www/static/:/var/www/static/
+      - staticfiles:/var/www/static/
       - /var/certbot/conf:/etc/letsencrypt/:ro
     env_file:
-      - .env
-    ports:
-      - "8000:8000"
+      - ./powercrm/settings/.env
     environment:
-      - DJANGO_SETTINGS_MODULE=powercrm.settings.local
+      - DJANGO_SETTINGS_MODULE=powercrm.settings.prod
+      - STATIC_ROOT=/var/www/static/
   nginx:
-    image: nginx:alpine
+    build: ./nginx
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - /var/www/static/:/var/www/static/
+      - staticfiles:/home/app/staticfiles/
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - backend
 
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - /var/certbot/conf:/etc/letsencrypt/:rw
-      - /var/certbot/www/:/var/www/certbot/:rw
-    depends_on:
-      - nginx
+volumes:
+  staticfiles:
+    # certbot:
+    #   image: certbot/certbot:latest
+    #   volumes:
+    #     - /var/certbot/conf:/etc/letsencrypt/:rw
+    #     - /var/certbot/www/:/var/www/certbot/:rw
+    #   depends_on:
+    #     - nginx
