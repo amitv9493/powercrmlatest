@@ -2,7 +2,7 @@ version: '3.7'
 services:
   backend:
     build: .
-    # restart: always
+    restart: on-failure
     # command: sh -c "gunicorn --config gunicorn_config.py /app/powercrm.wsgi:application"
     expose:
       - "8000"

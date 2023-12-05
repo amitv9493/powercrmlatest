@@ -5,7 +5,7 @@ __pycache__/
 ssh/
 # C extensions
 *.so
-/front/
+# /front/
 # Distribution / packaging
 .Python
 build/
