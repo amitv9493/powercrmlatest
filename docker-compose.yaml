@@ -2,7 +2,8 @@ version: '3'
 services:
   backend:
     build: .
-    restart: always
+    # restart: always
+    # command: sh -c "gunicorn --config gunicorn_config.py /app/powercrm.wsgi:application"
     expose:
       - "8000"
     volumes:
@@ -11,7 +12,10 @@ services:
       - /var/certbot/conf:/etc/letsencrypt/:ro
     env_file:
       - .env
-
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=powercrm.settings.local
   nginx:
     image: nginx:alpine
     restart: unless-stopped
