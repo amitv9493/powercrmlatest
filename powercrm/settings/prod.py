@@ -9,7 +9,6 @@ from .base import *  # noqa: F403
 load_dotenv()
 DEBUG = True
 
-db = os.environ.get("db")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
@@ -24,15 +23,7 @@ DATABASES = {
     },
 }
 
-if db:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",  # noqa: F405
-        }
-    }
 
-print(db)
 STATIC_ROOT = os.environ.get("STATIC_ROOT")
 
 MEDIA_ROOT = os.environ.get("MEDIA_ROOT")
