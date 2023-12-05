@@ -2,7 +2,6 @@ version: '3'
 services:
   backend:
     build: .
-    command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && gunicorn --config gunicorn_config.py powercrm.wsgi:application"
     restart: always
     expose:
       - "8000"
@@ -17,7 +16,7 @@ services:
     image: nginx:alpine
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "80:80"
       - "443:443"
     volumes:
       - /var/www/static/:/var/www/static/
