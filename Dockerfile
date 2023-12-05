@@ -5,8 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 WORKDIR /app
 
-COPY ./requirements/dev-requirements.txt ./
-RUN pip install --no-cache-dir -r dev-requirements.txt
+COPY ./requirements/prod-requirements.txt ./
+RUN pip install --no-cache-dir -r prod-requirements.txt
 
 COPY ./ /app/
 
