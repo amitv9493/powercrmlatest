@@ -118,3 +118,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+
+LOOKUP_EMAIL = os.environ.get("lookup_email", "")
+LOOKUP_PASSWORD = os.environ.get("lookup_password", "")

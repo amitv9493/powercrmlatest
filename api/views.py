@@ -483,8 +483,11 @@ class LookupViewset(viewsets.ViewSet):
     lookup_url = "https://api.lookup.energy"
 
     def get_headers(self, request):
-        headers = request.data.get("headers", None)
-        return headers if headers else {}
+        try:
+            headers = request.data.get("headers", None)
+        except Exception:
+            headers = {}
+        return headers
 
     def get_token(self, request):
         url = f"{self.lookup_url}/api/Auth/GetBearer"
