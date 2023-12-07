@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from .base import *  # noqa: F403
@@ -33,3 +34,8 @@ SESSION_COOKIE_HTTPONLY = True
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 SILKY_PYTHON_PROFILER = True
+
+
+LOOKUP_EMAIL = os.environ.get("lookup_email", "")
+LOOKUP_PASSWORD = os.environ.get("lookup_password", "")
+print(LOOKUP_EMAIL, LOOKUP_PASSWORD)

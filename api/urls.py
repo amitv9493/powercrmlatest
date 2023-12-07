@@ -17,6 +17,7 @@ from .views import (
     LOATemplateIDView,
     LOATemplateView,
     LoginView,
+    LookupViewset,
     NewElectricityProgressIDView,
     NewElectricityProgressView,
     NewGasProgressIDView,
@@ -34,7 +35,7 @@ router = DefaultRouter()
 router.register("general-document", GeneralDocumentView, basename="general-document")
 router.register("site-document", SiteDocumentView, basename="site-document")
 router.register("company-document", CompanyDocumentView, basename="company-document")
-
+router.register("lookup", LookupViewset, basename="lookup")
 urlpatterns = [
     # """ROUTERS"""
     path("sites/", include("sites.urls")),

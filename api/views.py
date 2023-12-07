@@ -1,7 +1,12 @@
+import json
+
+import requests
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
 from django.shortcuts import render
 from dotenv import load_dotenv
-from rest_framework import authentication, generics, permissions, status
+from rest_framework import authentication, generics, permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -472,20 +477,90 @@ class NewElectricityProgressIDView(generics.RetrieveUpdateDestroyAPIView):
 #         return Response(response.json(), status=200)
 
 
-# class hello(APIView):
-#     permission_classes = [permissions.AllowAny]
-#     # authentication_classes = [authentication.a]
+class LookupViewset(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [authentication.BasicAuthentication]
+    lookup_url = "https://api.lookup.energy"
 
-#     def post(self, request):
+    def get_token(self, request):
+        url = f"{self.lookup_url}/api/Auth/GetBearer"
 
-#         serializer = LoginSerializer(data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#             username = serializer.data.get("username")
-#             password = serializer.data.get("password")
+        payload = json.dumps(
+            {"username": settings.LOOKUP_EMAIL, "password": settings.LOOKUP_PASSWORD}
+        )
 
-#             user = authenticate(username=username, password=password)
+        headers = {
+            "content-type": "application/json",
+            "accept": "application/json",
+        }
 
-#             if user:
-#                 login(request, user)
+        token = request.session.get("lookup_token", None)
 
-#             return Response({"msg":"logged In successfully"},status=200)
+        data = requests.post(url, data=payload, headers=headers)
+        if data.status_code == 200:
+            request.session["lookup_token"] = token
+            # return data.json()["value"]["bearerToken"]
+        else:
+            return Response(data.json(), status=400)
+
+    def common_pattern(self, request, url, header):
+        if request.session.get("lookup_token", None):
+            self.get_token(request)
+
+        url = f"{self.lookup_url}/{url}"
+
+        def get_details():
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {request.session.get('lookup_token')}",
+            }
+            headers.update(header)
+            payload = json.dumps(request.data)
+            return requests.post(url, headers=headers, data=payload)
+
+        response = get_details()
+
+        if response.status_code == 401:
+            self.get_token(request)
+            response = get_details()
+
+        if response.status_code == 200:
+            return Response(response.json(), status=response.status_code)
+        else:
+            return Response(response.content, status=response.status_code)
+
+    @action(detail=False, methods=["POST"], url_path="electricity/SearchBypMpan")
+    def electrycity_search(self, request):
+        response = self.common_pattern(request, "api/Electricity/SearchByMpan", {})
+
+        return response
+
+    def list(self, request):
+        url = f"{self.lookup_url}/api/Usage/GetMySummary"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {request.session.get('lookup_token')}",
+            "accept": "text/plain",
+        }
+        response = requests.post(url, headers=headers)
+        return Response(response.json(), status=response.status_code)
+
+    @action(detail=False, methods=["POST"], url_path="Electricity/ValidateMpan")
+    def validate_MPAN(self, request):
+        response = self.common_pattern(
+            request,
+            "/api/Electricity/ValidateMpan",
+            {},
+            # {"accept": "text/plain", "Content-Type": "text/plain"},
+        )
+        return response
+
+    @action(detail=False, methods=["POST"], url_path="Property/SearchByPostcode")
+    def SearchByPostcode(self, request):
+        response = self.common_pattern(
+            request,
+            "api/Property/SearchByPostcode",
+            {},
+            # {"accept": "text/plain", "Content-Type": "text/plain"},
+        )
+        return response
