@@ -487,7 +487,7 @@ class LookupViewset(viewsets.ViewSet):
             headers = request.data.get("headers", None)
             return headers
         except Exception:
-            return dict()
+            return None
 
     def get_token(self, request):
         url = f"{self.lookup_url}/api/Auth/GetBearer"
@@ -520,7 +520,8 @@ class LookupViewset(viewsets.ViewSet):
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {request.session.get('lookupToken')}",
             }
-            headers.update(header)
+            if header:
+                headers.update(header)
             payload = json.dumps(request.data)
             return requests.post(url, headers=headers, data=payload)
 
