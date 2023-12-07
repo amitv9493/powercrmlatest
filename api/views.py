@@ -485,9 +485,9 @@ class LookupViewset(viewsets.ViewSet):
     def get_headers(self, request):
         try:
             headers = request.data.get("headers", None)
+            return headers
         except Exception:
-            headers = {}
-        return headers
+            return dict()
 
     def get_token(self, request):
         url = f"{self.lookup_url}/api/Auth/GetBearer"
